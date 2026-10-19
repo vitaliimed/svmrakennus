@@ -1,0 +1,12 @@
+data
+tooling
+.git
+.env
+.deployment.env
+.idea
+*.zip
+*.pdf
+build
+artifacts
+docs
+node_modules

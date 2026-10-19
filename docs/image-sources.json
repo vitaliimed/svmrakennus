@@ -1,0 +1,74 @@
+{
+  "reference": {
+    "url": "https://www.interkon.net.ua/",
+    "css_url": "https://cdn.prod.website-files.com/67b46102f11eacfef77ca41d/css/intercon-e751c2.webflow.shared.2cabf5a52.min.css",
+    "palette": {
+      "brand": "#fbbb21",
+      "dark": "#090b19",
+      "light": "#f8faff"
+    },
+    "font": "Ysabeau Infant",
+    "style": "Broad photographic hero; rounded CTA pills and circular project action motifs; generous typographic company and services sections; project-focused imagery. Reference photos and logos are not reused."
+  },
+  "assets": [
+    {
+      "name": "hero",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "png": "/workspace/scratch/42fd9f853def/asset-work/hero.png",
+      "webp": "/workspace/scratch/42fd9f853def/asset-work/hero.webp",
+      "webp_bytes": 301226,
+      "source": "Generated with OpenAI built-in imagegen, 2026-10-10",
+      "usage": "Illustrative sample photography only. Do not represent as actual client portfolio work, certificates, or testimonials. Replace with owner-provided photographs in production."
+    },
+    {
+      "name": "interior",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "png": "/workspace/scratch/42fd9f853def/asset-work/interior.png",
+      "webp": "/workspace/scratch/42fd9f853def/asset-work/interior.webp",
+      "webp_bytes": 242572,
+      "source": "Generated with OpenAI built-in imagegen, 2026-10-10",
+      "usage": "Illustrative sample photography only. Do not represent as actual client portfolio work, certificates, or testimonials. Replace with owner-provided photographs in production."
+    },
+    {
+      "name": "terrace",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "png": "/workspace/scratch/42fd9f853def/asset-work/terrace.png",
+      "webp": "/workspace/scratch/42fd9f853def/asset-work/terrace.webp",
+      "webp_bytes": 369062,
+      "source": "Generated with OpenAI built-in imagegen, 2026-10-10",
+      "usage": "Illustrative sample photography only. Do not represent as actual client portfolio work, certificates, or testimonials. Replace with owner-provided photographs in production."
+    },
+    {
+      "name": "craft",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "png": "/workspace/scratch/42fd9f853def/asset-work/craft.png",
+      "webp": "/workspace/scratch/42fd9f853def/asset-work/craft.webp",
+      "webp_bytes": 169154,
+      "source": "Generated with OpenAI built-in imagegen, 2026-10-10",
+      "usage": "Illustrative sample photography only. Do not represent as actual client portfolio work, certificates, or testimonials. Replace with owner-provided photographs in production."
+    }
+  ],
+  "generation": {
+    "mode": "OpenAI built-in imagegen",
+    "date": "2026-10-10",
+    "prompt_set": {
+      "hero": "Photorealistic-natural; wide 16:9 architectural hero of an understated Nordic timber house after renovation, cedar terrace, floor-to-ceiling glass, warm off-white interior, matte charcoal cladding and restrained Finnish woodland landscaping. Darker left third provides space for light text. Soft late-afternoon Nordic light. No text, logos, people, vehicles, watermarks, impossible construction or collage. Illustrative, not real client work.",
+      "interior": "Photorealistic-natural; wide 16:9 architectural editorial photograph of a renovated Nordic apartment interior with oak parquet, warm white walls, simple light oak kitchen, built-in joinery, large window and diffuse Helsinki daylight. Comfortable practical living, natural eye-level perspective, believable proportions. Cream, oak, stone-grey, muted-olive palette. No people, text, logos, watermarks or collage. Illustrative, not real client work.",
+      "terrace": "Photorealistic-natural; wide 16:9 architectural photograph of a practical Finnish timber terrace with clean cedar boards, horizontal timber privacy wall, modest bench seating, slim black metal and glass balustrade, off-white home facade and birch trees. Natural eye-level view along timber boards, soft overcast Nordic daylight, true realistic textures. No people, text, logos, watermarks or collage. Illustrative, not real client work.",
+      "craft": "Photorealistic-natural; horizontal 3:2 close editorial photograph of skilled gloved hands installing solid oak joinery against a cream wall in an organised Nordic interior renovation. Cropped dark workwear at edge, no identifiable face, hand tool and wood grain, natural shallow depth of field, oak-charcoal-cream palette. No logos, text, watermarks or collage. Illustrative, not real client work."
+    },
+    "source_licensing_note": "New AI-generated imagery; no third-party photographs, logos or reference site assets reused. Do not present as documentary portfolio evidence."
+  }
+}

@@ -1,0 +1,26 @@
+SVM Rakennus release 2.0 - 2026-10-10
+Environment: Linux, Go 1.22.2; Node.js; Python 3.12.
+Production Dockerfile: Go 1.26 (container build not executed here).
+
+Executed:
+  gofmt -w cmd internal web/embed.go
+  bash scripts/verify.sh
+
+Verification script completed successfully:
+  go vet ./...
+  go test -race -count=1 ./... (14 Go test functions)
+  go build -buildvcs=false ./cmd/server
+  node --check: admin.js, admin-help.js, site.js, tracking.js, test-tracking.cjs, test-admin.cjs
+  node scripts/test-tracking.cjs: PASS
+  node scripts/test-admin.cjs: PASS
+  bash -n: all scripts/*.sh
+  python3 scripts/check-content.py: PASS
+
+Additional packaging checks:
+  node --check of self-contained preview script
+  Complete FI/EN SSR output captured from httptest
+  PDF rendered with pdftoppm, all pages inspected as contact sheets
+  ZIP integrity and required files validated during packaging
+
+Not run: real browser viewport QA, Docker/Cloud Build, live Cloud Run IAM,
+SMTP delivery with owner credentials, actual advertising platform reception.

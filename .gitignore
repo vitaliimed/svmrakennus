@@ -1,0 +1,28 @@
+/data/
+/build/
+/artifacts/
+.env
+.deployment.env
+.idea/
+*.log
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+.deployment.env
+*.pem
+*.key
+credentials*.json
+service-account*.json
+*-key.json
+
+# Runtime data and local build output
+/data/
+/uploads/
+/logs/
+/bin/
+/tmp/
+node_modules/
+*.log
+.DS_Store

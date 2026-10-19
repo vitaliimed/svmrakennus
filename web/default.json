@@ -1,0 +1,1032 @@
+{
+  "schema": 1,
+  "revision": 1,
+  "updated": "",
+  "settings": {
+    "company": "SVM Rakennus",
+    "legalName": "",
+    "businessId": "",
+    "contactName": "SVM Rakennus",
+    "phone": "+358 00 000 0000",
+    "email": "hello@example.com",
+    "address": "",
+    "region": "Suomi",
+    "country": "FI",
+    "baseUrl": "",
+    "mainLanguage": "fi",
+    "logo": "/static/images/svm-logo.svg",
+    "favicon": "/static/images/favicon.svg",
+    "heroImage": "/static/images/hero.webp",
+    "aboutImage": "/static/images/craft.webp",
+    "accent": "#36594b",
+    "indexing": false,
+    "demo": true,
+    "robots": "",
+    "notificationEmail": "",
+    "allowAttachments": true,
+    "replyConfirmation": false,
+    "leadRetentionDays": 365,
+    "linkedIn": "",
+    "instagram": "",
+    "facebook": "",
+    "paper": "#f6f4ee",
+    "ink": "#243a30",
+    "surface": "#e8ede7",
+    "headingFont": "serif"
+  },
+  "text": {
+    "en": {
+      "nav.skip": "Skip to content",
+      "nav.label": "Main navigation",
+      "nav.services": "Services",
+      "nav.about": "About us",
+      "nav.projects": "Our work",
+      "nav.process": "How we work",
+      "nav.contact": "Let’s talk",
+      "nav.menu": "Open navigation",
+      "demo.notice": "Design preview · illustrative images and example projects · replace company details before launch",
+      "hero.eyebrow": "SVM Rakennus · Renovation in Finland",
+      "hero.title": "New life for\nfamiliar spaces.",
+      "hero.lead": "Thoughtful renovation, construction and finishing. One dependable partner for homes, businesses and subcontracting.",
+      "hero.cta": "Tell us about your project",
+      "hero.secondary": "Explore our work",
+      "hero.bottomLeft": "Careful work. Clear agreements.",
+      "hero.bottomRight": "For homeowners and businesses.",
+      "hero.scroll": "Explore our services",
+      "hero.imageAlt": "Illustrative Nordic timber house and terrace",
+      "values.1": "Written contracts",
+      "values.2": "Agreed schedules",
+      "values.3": "Transparent estimates",
+      "values.4": "One personal contact",
+      "services.eyebrow": "01 / What we do",
+      "services.title": "A single task.\nA complete project.",
+      "services.lead": "Individual work packages or a complete renovation. We define the scope together and deliver with care, from the first site visit to the final handover.",
+      "services.note": "Every project is priced individually. No one-size-fits-all promises.",
+      "services.link": "Tell us what you need",
+      "about.eyebrow": "02 / Built on trust",
+      "about.title": "Carefully built.\nClearly agreed.",
+      "about.lead": "Good renovation starts with understanding what is already there — and what needs to come next.",
+      "about.body": "SVM Rakennus renovates existing buildings and carries out construction work for private clients and businesses in Finland. We take on main contracts or subcontracting within an agreed scope. Your personal contact stays with you throughout the project.",
+      "about.point1": "A written scope, schedule and price before work starts.",
+      "about.point2": "Clear communication when the project needs a decision.",
+      "about.point3": "Changes are discussed and agreed before extra work.",
+      "about.link": "Meet your construction partner",
+      "about.imageAlt": "Illustrative carpenter fitting a timber detail",
+      "about.photoTag": "Care is in the details.",
+      "projects.eyebrow": "03 / Selected work",
+      "projects.title": "The work speaks\nfor itself.",
+      "projects.lead": "A closer look at the work, the details and the finished result. These example entries will be replaced with your completed projects.",
+      "projects.example": "Illustrative example",
+      "process.eyebrow": "04 / A clear way forward",
+      "process.title": "A clear start.\nAn agreed outcome.",
+      "process.lead": "You know what happens next, what has been agreed and who to call. We turn the scope into a practical plan before work begins.",
+      "process.1.title": "A conversation",
+      "process.1.body": "We discuss the building, your goals and the work you need.",
+      "process.2.title": "Site & estimate",
+      "process.2.body": "We assess the task and prepare an individual estimate.",
+      "process.3.title": "Written agreement",
+      "process.3.body": "Scope, pricing, payment stages and schedule are agreed in writing.",
+      "process.4.title": "Work & handover",
+      "process.4.body": "We carry out the work and review the agreed result together.",
+      "process.cta": "Start with a conversation",
+      "trust.eyebrow": "05 / Working together",
+      "trust.title": "Cooperation.\nClearly agreed.",
+      "trust.lead": "Reliability means practical commitments: a clear scope, a realistic schedule and transparent financial terms.",
+      "trust.1.title": "Clear finances",
+      "trust.1.body": "Pricing and payment stages are defined in the project agreement. Additional work is agreed separately.",
+      "trust.2.title": "Agreed scope",
+      "trust.2.body": "Responsibilities and deliverables are recorded before work starts. Relevant documents can be shared for each project.",
+      "trust.3.title": "Dependable planning",
+      "trust.3.body": "The schedule is discussed in advance. Changes are communicated directly through your personal contact.",
+      "reviews.eyebrow": "Client feedback",
+      "reviews.title": "In their own words.",
+      "faq.eyebrow": "06 / Good questions",
+      "faq.title": "Before we begin.",
+      "faq.lead": "A few things worth knowing before we discuss your project.",
+      "contact.eyebrow": "07 / Your next project",
+      "contact.title": "A good project starts\nwith a conversation.",
+      "contact.lead": "A small repair or a larger renovation. Tell us about your project and we will discuss the next steps.",
+      "contact.personLabel": "Direct contact with the company",
+      "form.name": "Your name",
+      "form.company": "Company, if applicable",
+      "form.email": "Email address",
+      "form.phone": "Phone number",
+      "form.service": "What do you need?",
+      "form.select": "Choose a service (optional)",
+      "form.message": "Tell us about your project",
+      "form.placeholder": "Location, scope, desired schedule and anything we should know…",
+      "form.files": "Attach photos or plans (optional)",
+      "form.filesHint": "Up to 3 files · 8 MB each · JPG, PNG, WebP, GIF or PDF",
+      "form.consent": "I have read the privacy notice and agree to be contacted about this enquiry.",
+      "form.submit": "Send project enquiry",
+      "form.note": "The form is a project enquiry, not a binding order. Pricing and terms are agreed separately.",
+      "form.success": "Thank you. Your enquiry has been saved. We will contact you using the details you provided.",
+      "form.error": "We could not send your enquiry. Please retry or contact us by email.",
+      "form.sending": "Sending…",
+      "footer.tagline": "Practical construction. Thoughtful renovation. Clear commitments.",
+      "footer.privacy": "Privacy notice",
+      "footer.terms": "Terms of cooperation",
+      "footer.cookies": "Cookie settings",
+      "cookies.heading": "Your privacy, your choice.",
+      "cookies.intro": "Necessary storage supports the website and remembers your cookie choice. Optional analytics and advertising tags are enabled only after your consent.",
+      "cookies.necessary": "Necessary",
+      "cookies.always": "Always active",
+      "cookies.analytics": "Analytics",
+      "cookies.marketing": "Advertising",
+      "cookies.read": "Read about cookies",
+      "cookies.accept": "Accept all",
+      "cookies.reject": "Reject optional",
+      "cookies.save": "Save my choices",
+      "detail.back": "Back to the website",
+      "detail.next": "Your project, your scope.",
+      "detail.estimate": "Every project is assessed individually. Contact us to discuss the work, location and schedule.",
+      "detail.location": "Location",
+      "detail.area": "Area",
+      "detail.year": "Year",
+      "gallery.open": "Open photograph",
+      "gallery.close": "Close photograph",
+      "thank-you.title": "Enquiry received.",
+      "thank-you.summary": "Your project enquiry has been saved.",
+      "confirmation.subject": "Thank you for your project enquiry",
+      "confirmation.body": "We have received your project enquiry. We will contact you using the details you provided. This message does not constitute an offer or a binding order.",
+      "privacy.title": "Privacy notice",
+      "privacy.summary": "Information about handling project enquiries and website data.",
+      "privacy.body": "DRAFT FOR THE WEBSITE OWNER. Replace this text with a notice that identifies the actual controller, contact details, legal bases, retention periods and service providers before launch.\n\nThis website collects the name, company, email, phone number, project details and optional attachments entered in the enquiry form. Data is used to respond to the enquiry and prepare the requested project discussion.\n\nEnquiries are available only to the site administrator. Attachments are private and require administrator sign-in. When configured, notification email is sent to the company contact. Hosting uses Google Cloud Run, Firestore and Cloud Storage. The company must specify the actual processing locations and any email provider.\n\nSpecify the actual retention period and explain requests for access, correction, deletion and other applicable rights, including how to contact the controller and the relevant supervisory authority.\n\nOptional analytics and advertising services are activated according to the visitor’s cookie choice. The chosen providers and purposes must be described in the final cookie notice.",
+      "cookies.title": "Cookie notice",
+      "cookies.summary": "Your choices for analytics and advertising.",
+      "cookies.body": "DRAFT. Confirm the actual provider list before launch.\n\nNecessary: the website stores the visitor’s consent choice locally for up to six months. The admin area uses an HttpOnly session cookie with an eight-hour lifetime. No advertising tags are activated before advertising consent.\n\nAnalytics: when you consent and the owner configures Google Analytics 4, the website can send page views, form interactions, scroll depth and selected content interactions.\n\nAdvertising: when you consent and the owner configures the relevant IDs, the website can load Google Ads, Meta Pixel, LinkedIn Insight Tag and TikTok Pixel, and send configured events.\n\nGoogle Tag Manager mode is an alternative to direct Google tags. In this template GTM loads only when both analytics and advertising have been accepted; any tags configured in GTM remain the owner’s responsibility.\n\nYou can change your choices using Cookie settings in the footer. Withdrawal reloads the page to stop loaded tags. Existing third-party cookies may need to be cleared through your browser or the provider’s controls.",
+      "terms.title": "Terms of cooperation",
+      "terms.summary": "Project scope, estimates and written agreements.",
+      "terms.body": "DRAFT. Add the company’s actual contractual and payment terms before launch.\n\nInformation on this website is an introduction to the company’s services. A form submission is an enquiry and does not create an order or a construction contract.\n\nThe scope, responsibilities, schedule, pricing, payment stages, changes and any applicable warranty terms are defined in a separate written agreement for each project.\n\nAdditional work and changes are discussed and agreed separately. No fixed project prices are published because every project is assessed individually.",
+      "nav.language": "Language",
+      "hero.photoLabel": "Everyday construction. Carefully done.",
+      "hero.caption": "Illustrative image · Nordic construction",
+      "form.filesError": "Maximum 3 files, 8 MB per file.",
+      "form.rateError": "Too many attempts. Wait 10 minutes or contact us by email.",
+      "form.validationError": "Check your name, email, message and privacy choice.",
+      "form.tokenError": "The form has expired. Please submit it again."
+    },
+    "fi": {
+      "nav.skip": "Siirry sisältöön",
+      "nav.label": "Päävalikko",
+      "nav.services": "Palvelut",
+      "nav.about": "Yritys",
+      "nav.projects": "Referenssit",
+      "nav.process": "Toimintatapamme",
+      "nav.contact": "Ota yhteyttä",
+      "nav.menu": "Avaa valikko",
+      "demo.notice": "Sivuston esikatselu · kuvituskuvat ja esimerkkikohteet · korvaa yritystiedot ennen julkaisua",
+      "hero.eyebrow": "SVM Rakennus · Korjausrakentaminen Suomessa",
+      "hero.title": "Uusi elämä\nvanhoille tiloille.",
+      "hero.lead": "Saneerausta, rakennustöitä ja huolellista viimeistelyä. Yksi luotettava kumppani koteihin, yrityksille ja aliurakointiin.",
+      "hero.cta": "Kerro hankkeestasi",
+      "hero.secondary": "Tutustu töihimme",
+      "hero.bottomLeft": "Huolellinen toteutus. Selkeät sopimukset.",
+      "hero.bottomRight": "Yksityisille ja yrityksille.",
+      "hero.scroll": "Tutustu palveluihimme",
+      "hero.imageAlt": "Kuvituksellinen pohjoismainen puutalo ja terassi",
+      "values.1": "Kirjalliset sopimukset",
+      "values.2": "Sovitut aikataulut",
+      "values.3": "Selkeät kustannusarviot",
+      "values.4": "Yksi henkilökohtainen yhteyshenkilö",
+      "services.eyebrow": "01 / Palvelumme",
+      "services.title": "Pienestä työstä\nkoko hankkeeseen.",
+      "services.lead": "Yksittäinen työvaihe tai koko saneeraus. Sovimme työn laajuudesta yhdessä ja toteutamme huolellisesti ensimmäisestä kohdekäynnistä luovutukseen.",
+      "services.note": "Jokainen hanke hinnoitellaan yksilöllisesti työn laajuuden perusteella.",
+      "services.link": "Kerro tarpeestasi",
+      "about.eyebrow": "02 / Luottamuksen varaan",
+      "about.title": "Hyvin tehty.\nYhdessä sovittu.",
+      "about.lead": "Hyvä korjausrakentaminen alkaa nykytilanteen ja tulevien tarpeiden ymmärtämisestä.",
+      "about.body": "SVM Rakennus korjaa ja saneeraa olemassa olevia rakennuksia sekä toteuttaa rakennustöitä yksityisille ja yrityksille Suomessa. Toimimme sovitun laajuuden mukaan pää- tai aliurakoitsijana. Sama yhteyshenkilö on tukenasi hankkeen ajan.",
+      "about.point1": "Kirjallinen työn laajuus, aikataulu ja hinta ennen aloitusta.",
+      "about.point2": "Selkeä viestintä, kun hanke tarvitsee päätöksiä.",
+      "about.point3": "Muutoksista sovitaan ennen lisätöiden aloittamista.",
+      "about.link": "Tutustu rakennuskumppaniisi",
+      "about.imageAlt": "Kuvituksellinen puuseppä viimeistelemässä puuosaa",
+      "about.photoTag": "Huolellisuus näkyy yksityiskohdissa.",
+      "projects.eyebrow": "03 / Valitut kohteet",
+      "projects.title": "Työ kertoo\ntekijästään.",
+      "projects.lead": "Tutustu työhön, yksityiskohtiin ja lopputulokseen. Nämä esimerkit korvataan yrityksen toteutuneilla kohteilla.",
+      "projects.example": "Kuvituksellinen esimerkki",
+      "process.eyebrow": "04 / Selkeä eteneminen",
+      "process.title": "Selkeä alku.\nSovittu lopputulos.",
+      "process.lead": "Tiedät seuraavan vaiheen, sovitut asiat ja yhteyshenkilön. Muutamme työn laajuuden käytännön suunnitelmaksi ennen aloitusta.",
+      "process.1.title": "Ensimmäinen keskustelu",
+      "process.1.body": "Keskustelemme kohteesta, tavoitteistasi ja tarvittavista töistä.",
+      "process.2.title": "Kohde ja kustannusarvio",
+      "process.2.body": "Arvioimme työn ja laadimme yksilöllisen kustannusarvion.",
+      "process.3.title": "Kirjallinen sopimus",
+      "process.3.body": "Työn laajuus, hinta, maksuerät ja aikataulu sovitaan kirjallisesti.",
+      "process.4.title": "Toteutus ja luovutus",
+      "process.4.body": "Toteutamme työt ja tarkistamme sovitun lopputuloksen yhdessä.",
+      "process.cta": "Aloitetaan keskustelusta",
+      "trust.eyebrow": "05 / Yhteistyö",
+      "trust.title": "Yhteistyötä\nselkein ehdoin.",
+      "trust.lead": "Luotettavuus tarkoittaa käytännön sitoumuksia: selkeää työn laajuutta, realistista aikataulua ja läpinäkyviä maksuehtoja.",
+      "trust.1.title": "Selkeät kustannukset",
+      "trust.1.body": "Hinnoittelu ja maksuerät määritellään hankkeen sopimuksessa. Lisätöistä sovitaan erikseen.",
+      "trust.2.title": "Sovittu työn laajuus",
+      "trust.2.body": "Vastuut ja työn sisältö kirjataan ennen aloitusta. Hankekohtaiset asiakirjat voidaan toimittaa asiakkaalle.",
+      "trust.3.title": "Luotettava suunnittelu",
+      "trust.3.body": "Aikataulusta keskustellaan etukäteen. Muutoksista viestitään suoraan oman yhteyshenkilösi kautta.",
+      "reviews.eyebrow": "Asiakaspalaute",
+      "reviews.title": "Asiakkaiden sanoin.",
+      "faq.eyebrow": "06 / Hyviä kysymyksiä",
+      "faq.title": "Ennen aloitusta.",
+      "faq.lead": "Muutama asia ennen hankkeestasi keskustelemista.",
+      "contact.eyebrow": "07 / Seuraava hankkeesi",
+      "contact.title": "Hyvä hanke alkaa\nkeskustelusta.",
+      "contact.lead": "Pieni korjaus tai laajempi saneeraus. Kerro hankkeestasi, niin keskustellaan seuraavista vaiheista.",
+      "contact.personLabel": "Suora yhteys yritykseen",
+      "form.name": "Nimesi",
+      "form.company": "Yritys tarvittaessa",
+      "form.email": "Sähköpostiosoite",
+      "form.phone": "Puhelinnumero",
+      "form.service": "Mitä tarvitset?",
+      "form.select": "Valitse palvelu (valinnainen)",
+      "form.message": "Kerro hankkeestasi",
+      "form.placeholder": "Sijainti, työn laajuus, toivottu aikataulu ja muut tärkeät tiedot…",
+      "form.files": "Liitä kuvia tai suunnitelmia (valinnainen)",
+      "form.filesHint": "Enintään 3 tiedostoa · 8 Mt / tiedosto · JPG, PNG, WebP, GIF tai PDF",
+      "form.consent": "Olen lukenut tietosuojailmoituksen ja hyväksyn yhteydenoton tähän tiedusteluun liittyen.",
+      "form.submit": "Lähetä tiedustelu",
+      "form.note": "Lomake on tiedustelu, ei sitova tilaus. Hinta ja ehdot sovitaan erikseen.",
+      "form.success": "Kiitos. Tiedustelusi on tallennettu. Otamme yhteyttä antamillasi yhteystiedoilla.",
+      "form.error": "Tiedustelua ei voitu lähettää. Yritä uudelleen tai ota yhteyttä sähköpostitse.",
+      "form.sending": "Lähetetään…",
+      "footer.tagline": "Käytännön rakennustyöt. Huolellinen saneeraus. Selkeät sitoumukset.",
+      "footer.privacy": "Tietosuojailmoitus",
+      "footer.terms": "Yhteistyön ehdot",
+      "footer.cookies": "Evästeasetukset",
+      "cookies.heading": "Yksityisyytesi, sinun valintasi.",
+      "cookies.intro": "Välttämätön tallennus tukee sivuston toimintaa ja muistaa evästevalintasi. Valinnaiset analytiikka- ja mainostunnisteet otetaan käyttöön vasta suostumuksellasi.",
+      "cookies.necessary": "Välttämättömät",
+      "cookies.always": "Aina käytössä",
+      "cookies.analytics": "Analytiikka",
+      "cookies.marketing": "Mainonta",
+      "cookies.read": "Lue evästeistä",
+      "cookies.accept": "Hyväksy kaikki",
+      "cookies.reject": "Hylkää valinnaiset",
+      "cookies.save": "Tallenna valintani",
+      "detail.back": "Takaisin sivustolle",
+      "detail.next": "Hankkeesi, tarpeesi.",
+      "detail.estimate": "Jokainen hanke arvioidaan yksilöllisesti. Ota yhteyttä työn, sijainnin ja aikataulun sopimiseksi.",
+      "detail.location": "Sijainti",
+      "detail.area": "Pinta-ala",
+      "detail.year": "Vuosi",
+      "gallery.open": "Avaa kuva",
+      "gallery.close": "Sulje kuva",
+      "thank-you.title": "Tiedustelu vastaanotettu.",
+      "thank-you.summary": "Tiedustelusi on tallennettu.",
+      "confirmation.subject": "Kiitos tiedustelustasi",
+      "confirmation.body": "Olemme vastaanottaneet tiedustelusi. Otamme yhteyttä antamillasi yhteystiedoilla. Tämä viesti ei ole tarjous eikä sitova tilaus.",
+      "privacy.title": "Tietosuojailmoitus",
+      "privacy.summary": "Tietoa tiedustelujen ja sivuston tietojen käsittelystä.",
+      "privacy.body": "LUONNOS SIVUSTON OMISTAJALLE. Korvaa tämä teksti ennen julkaisua ilmoituksella, jossa nimetään oikea rekisterinpitäjä, yhteystiedot, käsittelyperusteet, säilytysajat ja palveluntarjoajat.\n\nSivusto kerää yhteydenottolomakkeella annetun nimen, yrityksen, sähköpostin, puhelinnumeron, hanketiedot ja valinnaiset liitteet. Tietoja käytetään tiedusteluun vastaamiseen ja pyydetyn hankekeskustelun valmisteluun.\n\nTiedustelut ovat vain ylläpitäjän saatavilla. Liitteet ovat yksityisiä ja edellyttävät ylläpitäjän kirjautumista. Kun sähköposti on määritetty, ilmoitus lähetetään yrityksen yhteyshenkilölle. Palvelu käyttää Google Cloud Runia, Firestorea ja Cloud Storagea. Yrityksen tulee määritellä todelliset käsittelyalueet ja sähköpostipalveluntarjoaja.\n\nMäärittele todellinen säilytysaika ja kuvaa tarkastus-, korjaus-, poisto- ja muut soveltuvat oikeudet sekä yhteydenotto rekisterinpitäjään ja toimivaltaiseen valvontaviranomaiseen.\n\nValinnaiset analytiikka- ja mainontapalvelut aktivoidaan kävijän evästevalinnan mukaan. Valitut palveluntarjoajat ja tarkoitukset tulee kuvata lopullisessa evästeilmoituksessa.",
+      "cookies.title": "Evästeilmoitus",
+      "cookies.summary": "Analytiikka- ja mainontavalintasi.",
+      "cookies.body": "LUONNOS. Vahvista käytössä olevat palveluntarjoajat ennen julkaisua.\n\nVälttämättömät: sivusto tallentaa kävijän suostumusvalinnan paikallisesti enintään kuudeksi kuukaudeksi. Ylläpito käyttää kahdeksan tunnin HttpOnly-istuntoevästettä. Mainostunnisteita ei aktivoida ennen mainontasuostumusta.\n\nAnalytiikka: suostumuksen ja ylläpitäjän Google Analytics 4 -määrityksen jälkeen sivusto voi lähettää sivukatseluja, lomaketoimintoja, vierityssyvyyttä ja valittuja sisältötapahtumia.\n\nMainonta: suostumuksen ja tunnisteiden määrityksen jälkeen sivusto voi ladata Google Adsin, Meta Pixelin, LinkedIn Insight Tagin ja TikTok Pixelin sekä lähettää määritettyjä tapahtumia.\n\nGoogle Tag Manager -tila korvaa suorat Google-tunnisteet. Tässä mallissa GTM ladataan vain, kun sekä analytiikka että mainonta on hyväksytty. GTM-tunnisteiden määritys on omistajan vastuulla.\n\nVoit muuttaa valintojasi alatunnisteen Evästeasetukset-painikkeella. Suostumuksen peruminen lataa sivun uudelleen ja pysäyttää ladatut tunnisteet. Aiemmat kolmannen osapuolen evästeet voidaan joutua poistamaan selaimen tai palveluntarjoajan asetuksista.",
+      "terms.title": "Yhteistyön ehdot",
+      "terms.summary": "Työn laajuus, kustannusarviot ja kirjalliset sopimukset.",
+      "terms.body": "LUONNOS. Lisää yrityksen todelliset sopimus- ja maksuehdot ennen julkaisua.\n\nSivuston tiedot esittelevät yrityksen palveluja. Lomakkeen lähettäminen on tiedustelu eikä muodosta tilausta tai rakennussopimusta.\n\nTyön laajuus, vastuut, aikataulu, hinnoittelu, maksuerät, muutokset ja mahdolliset takuuehdot määritellään erillisessä kirjallisessa hankekohtaisessa sopimuksessa.\n\nLisätöistä ja muutoksista keskustellaan ja sovitaan erikseen. Kiinteitä hankehintoja ei julkaista, koska jokainen hanke arvioidaan yksilöllisesti.",
+      "nav.language": "Kieli",
+      "hero.photoLabel": "Rakentamisen arki. Huolella tehty.",
+      "hero.caption": "Kuvituskuva · pohjoismaista rakentamista",
+      "form.filesError": "Enintään 3 tiedostoa, 8 Mt / tiedosto.",
+      "form.rateError": "Liian monta yritystä. Odota 10 minuuttia tai ota yhteyttä sähköpostitse.",
+      "form.validationError": "Tarkista nimi, sähköposti, viesti ja tietosuojavalinta.",
+      "form.tokenError": "Lomakkeen voimassaolo päättyi. Lähetä lomake uudelleen."
+    },
+    "uk": {
+      "nav.skip": "Перейти до вмісту",
+      "nav.label": "Головне меню",
+      "nav.services": "Послуги",
+      "nav.about": "Компанія",
+      "nav.projects": "Виконані об’єкти",
+      "nav.process": "Як ми працюємо",
+      "nav.contact": "Зв’язатися",
+      "nav.menu": "Відкрити меню",
+      "nav.language": "Мова",
+      "demo.notice": "Попередній перегляд сайту · ілюстрації та демонстраційні об’єкти · замініть реквізити перед публікацією",
+      "hero.eyebrow": "SVM Rakennus · Ремонт і реконструкція у Фінляндії",
+      "hero.title": "Нове життя\nзнайомих просторів.",
+      "hero.lead": "Реновація, будівельні роботи та ретельне оздоблення. Один надійний партнер для житла, бізнесу й субпідряду.",
+      "hero.cta": "Розкажіть про ваш проєкт",
+      "hero.secondary": "Переглянути наші роботи",
+      "hero.bottomLeft": "Ретельне виконання. Зрозумілі договори.",
+      "hero.bottomRight": "Для приватних замовників і бізнесу.",
+      "hero.scroll": "Переглянути наші послуги",
+      "hero.imageAlt": "Ілюстрація скандинавського дерев’яного будинку з терасою",
+      "hero.photoLabel": "Будівельні будні. Ретельне виконання.",
+      "hero.caption": "Ілюстрація · скандинавське будівництво",
+      "values.1": "Письмові договори",
+      "values.2": "Узгоджені строки",
+      "values.3": "Зрозумілі кошториси",
+      "values.4": "Одна відповідальна контактна особа",
+      "services.eyebrow": "01 / Наші послуги",
+      "services.title": "Від окремої роботи\nдо цілого проєкту.",
+      "services.lead": "Окремий етап або повна реновація. Разом визначаємо обсяг робіт і ретельно виконуємо їх від першого огляду до здачі.",
+      "services.note": "Вартість кожного проєкту розраховуємо індивідуально залежно від обсягу робіт.",
+      "services.link": "Розкажіть про ваше завдання",
+      "about.eyebrow": "02 / На основі довіри",
+      "about.title": "Добре зроблено.\nРазом узгоджено.",
+      "about.lead": "Якісна реновація починається з розуміння поточного стану й майбутніх потреб.",
+      "about.body": "SVM Rakennus ремонтує та реконструює наявні будівлі й виконує будівельні роботи для приватних замовників і бізнесу у Фінляндії. Працюємо як основний підрядник або субпідрядник у межах погодженого обсягу. Упродовж проєкту вас супроводжує одна контактна особа.",
+      "about.point1": "До початку письмово визначаємо обсяг робіт, строки й ціну.",
+      "about.point2": "Зрозуміле спілкування, коли проєкт потребує рішень.",
+      "about.point3": "Зміни погоджуємо до початку додаткових робіт.",
+      "about.link": "Познайомитися з вашим будівельним партнером",
+      "about.imageAlt": "Ілюстрація столяра, який завершує роботу з дерев’яною деталлю",
+      "about.photoTag": "Ретельність помітна в деталях.",
+      "projects.eyebrow": "03 / Вибрані об’єкти",
+      "projects.title": "Робота говорить\nпро майстра.",
+      "projects.lead": "Перегляньте роботи, деталі й результат. Ці приклади замінюються справжніми об’єктами компанії.",
+      "projects.example": "Ілюстративний приклад",
+      "process.eyebrow": "04 / Зрозуміла послідовність",
+      "process.title": "Зрозумілий початок.\nУзгоджений результат.",
+      "process.lead": "Ви знаєте наступний етап, домовленості й контактну особу. До початку перетворюємо обсяг робіт на практичний план.",
+      "process.1.title": "Перша розмова",
+      "process.1.body": "Обговорюємо об’єкт, ваші цілі та необхідні роботи.",
+      "process.2.title": "Об’єкт і кошторис",
+      "process.2.body": "Оцінюємо роботи й складаємо індивідуальний кошторис.",
+      "process.3.title": "Письмовий договір",
+      "process.3.body": "Письмово погоджуємо обсяг робіт, ціну, етапи оплати та строки.",
+      "process.4.title": "Виконання й здача",
+      "process.4.body": "Виконуємо роботи й разом перевіряємо погоджений результат.",
+      "process.cta": "Почнімо з розмови",
+      "trust.eyebrow": "05 / Співпраця",
+      "trust.title": "Співпраця\nна зрозумілих умовах.",
+      "trust.lead": "Надійність означає практичні зобов’язання: чіткий обсяг робіт, реалістичні строки й прозорі умови оплати.",
+      "trust.1.title": "Зрозумілі витрати",
+      "trust.1.body": "Ціну та етапи оплати визначає договір проєкту. Додаткові роботи погоджуємо окремо.",
+      "trust.2.title": "Узгоджений обсяг",
+      "trust.2.body": "Обов’язки й зміст робіт фіксуємо до початку. Документи проєкту можна надати замовнику.",
+      "trust.3.title": "Надійне планування",
+      "trust.3.body": "Строки обговорюємо заздалегідь. Про зміни повідомляє ваша контактна особа.",
+      "reviews.eyebrow": "Відгуки замовників",
+      "reviews.title": "Словами клієнтів.",
+      "faq.eyebrow": "06 / Важливі запитання",
+      "faq.title": "Перед початком.",
+      "faq.lead": "Кілька відповідей перед обговоренням вашого проєкту.",
+      "contact.eyebrow": "07 / Ваш наступний проєкт",
+      "contact.title": "Хороший проєкт починається\nз розмови.",
+      "contact.lead": "Невеликий ремонт або комплексна реновація. Розкажіть про проєкт, і ми обговоримо наступні кроки.",
+      "contact.personLabel": "Прямий зв’язок із компанією",
+      "form.name": "Ваше ім’я",
+      "form.company": "Компанія, якщо є",
+      "form.email": "Електронна пошта",
+      "form.phone": "Номер телефону",
+      "form.service": "Що вам потрібно?",
+      "form.select": "Виберіть послугу (необов’язково)",
+      "form.message": "Розкажіть про проєкт",
+      "form.placeholder": "Місце, обсяг робіт, бажані строки та інша важлива інформація…",
+      "form.files": "Додайте фото або плани (необов’язково)",
+      "form.filesHint": "До 3 файлів · 8 МБ кожен · JPG, PNG, WebP, GIF або PDF",
+      "form.consent": "Я прочитав повідомлення про конфіденційність і погоджуюся на зв’язок щодо цього звернення.",
+      "form.submit": "Надіслати запит",
+      "form.note": "Форма є запитом, а не обов’язковим замовленням. Ціну та умови погоджуємо окремо.",
+      "form.success": "Дякуємо. Ваш запит збережено. Зв’яжемося з вами за наданими контактами.",
+      "form.error": "Не вдалося надіслати запит. Спробуйте ще раз або напишіть на email.",
+      "form.sending": "Надсилання…",
+      "form.filesError": "До 3 файлів, до 8 МБ кожен.",
+      "form.rateError": "Забагато спроб. Зачекайте 10 хвилин або напишіть на email.",
+      "form.validationError": "Перевірте ім’я, email, повідомлення та згоду на обробку даних.",
+      "form.tokenError": "Час дії форми завершився. Надішліть форму повторно.",
+      "footer.tagline": "Практичні будівельні роботи. Ретельна реновація. Зрозумілі домовленості.",
+      "footer.privacy": "Повідомлення про конфіденційність",
+      "footer.terms": "Умови співпраці",
+      "footer.cookies": "Налаштування cookies",
+      "cookies.heading": "Ваша приватність, ваш вибір.",
+      "cookies.intro": "Необхідне зберігання підтримує роботу сайту та запам’ятовує вибір cookies. Необов’язкові аналітичні й рекламні теги вмикаються лише після вашої згоди.",
+      "cookies.necessary": "Необхідні",
+      "cookies.always": "Завжди ввімкнені",
+      "cookies.analytics": "Аналітика",
+      "cookies.marketing": "Реклама",
+      "cookies.read": "Прочитати про cookies",
+      "cookies.accept": "Прийняти всі",
+      "cookies.reject": "Відхилити необов’язкові",
+      "cookies.save": "Зберегти мій вибір",
+      "detail.back": "Повернутися до сайту",
+      "detail.next": "Ваш проєкт, ваш обсяг робіт.",
+      "detail.estimate": "Кожен проєкт оцінюємо індивідуально. Зв’яжіться з нами, щоб обговорити роботи, місце й строки.",
+      "detail.location": "Місце",
+      "detail.area": "Площа",
+      "detail.year": "Рік",
+      "gallery.open": "Відкрити фотографію",
+      "gallery.close": "Закрити фотографію",
+      "thank-you.title": "Запит отримано.",
+      "thank-you.summary": "Запит щодо вашого проєкту збережено.",
+      "confirmation.subject": "Дякуємо за запит щодо проєкту",
+      "confirmation.body": "Ми отримали ваш запит. Зв’яжемося з вами за наданими контактами. Це повідомлення не є пропозицією або обов’язковим замовленням.",
+      "privacy.title": "Повідомлення про конфіденційність",
+      "privacy.summary": "Інформація про обробку звернень і даних сайту.",
+      "privacy.body": "ЧЕРНЕТКА ДЛЯ ВЛАСНИКА САЙТУ. Перед публікацією замініть цей текст повідомленням із даними фактичного контролера, контактами, правовими підставами, строками зберігання та переліком постачальників.\n\nСайт збирає ім’я, компанію, email, телефон, опис проєкту та необов’язкові вкладення, які відвідувач надає у формі. Дані використовуються для відповіді та обговорення проєкту.\n\nЗвернення доступні лише адміністратору. Вкладення є приватними й потребують входу. Якщо email налаштовано, сповіщення надходить контактній особі компанії. Сайт використовує Google Cloud Run, Firestore та Cloud Storage. Власник має вказати фактичні місця обробки й поштового провайдера.\n\nУкажіть реальний строк зберігання та порядок запитів на доступ, виправлення, видалення й інші права, а також контакти контролера й наглядового органу.\n\nНеобов’язкові аналітичні й рекламні сервіси активуються відповідно до вибору cookies. Обрані платформи та цілі потрібно описати в остаточному повідомленні.",
+      "cookies.title": "Повідомлення про cookies",
+      "cookies.summary": "Ваш вибір щодо аналітики й реклами.",
+      "cookies.body": "ЧЕРНЕТКА. Перед публікацією підтвердьте фактичний перелік провайдерів.\n\nНеобхідне: вибір cookies зберігається локально до шести місяців. Адмінпанель використовує HttpOnly cookie сесії строком вісім годин. Рекламні теги не активуються до згоди на рекламу.\n\nАналітика: за згоди й налаштованого GA4 сайт може надсилати перегляди сторінок, взаємодію з формою, глибину прокручування та вибрані взаємодії з контентом.\n\nРеклама: за згоди й налаштованих ID сайт може завантажувати Google Ads, Meta Pixel, LinkedIn Insight Tag і TikTok Pixel та надсилати визначені події.\n\nРежим GTM є альтернативою прямим тегам Google. У цьому шаблоні GTM завантажується лише після згоди одночасно на аналітику й рекламу. Власник відповідає за теги свого контейнера.\n\nВибір можна змінити через налаштування cookies у підвалі. Відкликання згоди перезавантажує сторінку, щоб зупинити завантажені теги. Наявні сторонні cookies іноді потрібно видалити засобами браузера або провайдера.",
+      "terms.title": "Умови співпраці",
+      "terms.summary": "Обсяг робіт, кошторис і письмові домовленості.",
+      "terms.body": "ЧЕРНЕТКА. Перед публікацією додайте справжні договірні умови й порядок оплати компанії.\n\nІнформація на сайті представляє послуги компанії. Надсилання форми є зверненням і не створює замовлення або будівельного договору.\n\nОбсяг, відповідальність, строки, ціна, етапи оплати, зміни та застосовні гарантійні умови визначаються окремим письмовим договором кожного проєкту.\n\nДодаткові роботи й зміни обговорюються та погоджуються окремо. Фіксовані ціни не публікуються, оскільки кожен проєкт оцінюється індивідуально."
+    }
+  },
+  "blocks": [
+    {
+      "id": "services",
+      "enabled": true
+    },
+    {
+      "id": "about",
+      "enabled": true
+    },
+    {
+      "id": "projects",
+      "enabled": true
+    },
+    {
+      "id": "process",
+      "enabled": true
+    },
+    {
+      "id": "trust",
+      "enabled": true
+    },
+    {
+      "id": "reviews",
+      "enabled": false
+    },
+    {
+      "id": "faq",
+      "enabled": true
+    },
+    {
+      "id": "contact",
+      "enabled": true
+    }
+  ],
+  "services": [
+    {
+      "id": "renovation",
+      "slug": "renovation",
+      "enabled": true,
+      "demo": false,
+      "title": {
+        "en": "Renovation & refurbishment",
+        "fi": "Saneeraus ja korjausrakentaminen",
+        "uk": "Реновація та реконструкція"
+      },
+      "summary": {
+        "en": "Give existing buildings a new chapter, from selected improvements to a complete renovation.",
+        "fi": "Uusi vaihe olemassa olevalle rakennukselle yksittäisistä parannuksista kokonaissaneeraukseen.",
+        "uk": "Новий етап для наявної будівлі: від окремих покращень до комплексної реновації."
+      },
+      "body": {
+        "en": "Give existing buildings a new chapter, from selected improvements to a complete renovation.\n\nWe assess the task, site conditions and required coordination before preparing an individual estimate. The scope, responsibilities and schedule are agreed in a written contract.\n\nContact us with the location, available plans or photos, and your preferred schedule to discuss the next steps.",
+        "fi": "Uusi vaihe olemassa olevalle rakennukselle yksittäisistä parannuksista kokonaissaneeraukseen.\n\nArvioimme tehtävän, kohteen olosuhteet ja tarvittavan yhteensovittamisen ennen yksilöllistä kustannusarviota. Työn laajuus, vastuut ja aikataulu sovitaan kirjallisessa sopimuksessa.\n\nOta yhteyttä ja kerro sijainti, mahdolliset suunnitelmat tai kuvat sekä toivottu aikataulu, niin keskustellaan seuraavista vaiheista.",
+        "uk": "Новий етап для наявної будівлі: від окремих покращень до комплексної реновації.\n\nПеред індивідуальним кошторисом оцінюємо завдання, умови об’єкта та необхідну координацію. Обсяг робіт, відповідальність і строки фіксуємо в письмовому договорі.\n\nПовідомте місце, додайте наявні плани або фото та бажані строки, щоб обговорити наступні кроки."
+      },
+      "category": {
+        "en": "Construction services",
+        "fi": "Rakennuspalvelut",
+        "uk": "Будівельні послуги"
+      },
+      "location": "",
+      "image": "/static/images/interior.webp",
+      "gallery": [
+        "/static/images/interior.webp"
+      ],
+      "area": "",
+      "year": "",
+      "seo": {
+        "en": {
+          "title": "Renovation & refurbishment | SVM Rakennus",
+          "description": "Give existing buildings a new chapter, from selected improvements to a complete renovation.",
+          "image": ""
+        },
+        "fi": {
+          "title": "Saneeraus ja korjausrakentaminen | SVM Rakennus",
+          "description": "Uusi vaihe olemassa olevalle rakennukselle yksittäisistä parannuksista kokonaissaneeraukseen.",
+          "image": ""
+        }
+      }
+    },
+    {
+      "id": "demolition",
+      "slug": "demolition",
+      "enabled": true,
+      "demo": false,
+      "title": {
+        "en": "Demolition works",
+        "fi": "Purkutyöt",
+        "uk": "Демонтажні роботи"
+      },
+      "summary": {
+        "en": "Carefully planned demolition as a standalone contract or the first stage of a larger project.",
+        "fi": "Huolellisesti suunnitellut purkutyöt erillisenä urakkana tai laajemman hankkeen alkuvaiheena.",
+        "uk": "Ретельно спланований демонтаж як окремий підряд або перший етап більшого проєкту."
+      },
+      "body": {
+        "en": "Carefully planned demolition as a standalone contract or the first stage of a larger project.\n\nWe assess the task, site conditions and required coordination before preparing an individual estimate. The scope, responsibilities and schedule are agreed in a written contract.\n\nContact us with the location, available plans or photos, and your preferred schedule to discuss the next steps.",
+        "fi": "Huolellisesti suunnitellut purkutyöt erillisenä urakkana tai laajemman hankkeen alkuvaiheena.\n\nArvioimme tehtävän, kohteen olosuhteet ja tarvittavan yhteensovittamisen ennen yksilöllistä kustannusarviota. Työn laajuus, vastuut ja aikataulu sovitaan kirjallisessa sopimuksessa.\n\nOta yhteyttä ja kerro sijainti, mahdolliset suunnitelmat tai kuvat sekä toivottu aikataulu, niin keskustellaan seuraavista vaiheista.",
+        "uk": "Ретельно спланований демонтаж як окремий підряд або перший етап більшого проєкту.\n\nПеред індивідуальним кошторисом оцінюємо завдання, умови об’єкта та необхідну координацію. Обсяг робіт, відповідальність і строки фіксуємо в письмовому договорі.\n\nПовідомте місце, додайте наявні плани або фото та бажані строки, щоб обговорити наступні кроки."
+      },
+      "category": {
+        "en": "Construction services",
+        "fi": "Rakennuspalvelut",
+        "uk": "Будівельні послуги"
+      },
+      "location": "",
+      "image": "/static/images/craft.webp",
+      "gallery": [
+        "/static/images/craft.webp"
+      ],
+      "area": "",
+      "year": "",
+      "seo": {
+        "en": {
+          "title": "Demolition works | SVM Rakennus",
+          "description": "Carefully planned demolition as a standalone contract or the first stage of a larger project.",
+          "image": ""
+        },
+        "fi": {
+          "title": "Purkutyöt | SVM Rakennus",
+          "description": "Huolellisesti suunnitellut purkutyöt erillisenä urakkana tai laajemman hankkeen alkuvaiheena.",
+          "image": ""
+        }
+      }
+    },
+    {
+      "id": "interior",
+      "slug": "interior",
+      "enabled": true,
+      "demo": false,
+      "title": {
+        "en": "Interior construction",
+        "fi": "Sisäpuoliset rakennustyöt",
+        "uk": "Внутрішні будівельні роботи"
+      },
+      "summary": {
+        "en": "Installation and finishing work, coordinated around the agreed scope and the building.",
+        "fi": "Asennus- ja viimeistelytyöt kohteen ja sovitun työn laajuuden mukaan.",
+        "uk": "Монтаж і оздоблення відповідно до особливостей об’єкта та погодженого обсягу."
+      },
+      "body": {
+        "en": "Installation and finishing work, coordinated around the agreed scope and the building.\n\nWe assess the task, site conditions and required coordination before preparing an individual estimate. The scope, responsibilities and schedule are agreed in a written contract.\n\nContact us with the location, available plans or photos, and your preferred schedule to discuss the next steps.",
+        "fi": "Asennus- ja viimeistelytyöt kohteen ja sovitun työn laajuuden mukaan.\n\nArvioimme tehtävän, kohteen olosuhteet ja tarvittavan yhteensovittamisen ennen yksilöllistä kustannusarviota. Työn laajuus, vastuut ja aikataulu sovitaan kirjallisessa sopimuksessa.\n\nOta yhteyttä ja kerro sijainti, mahdolliset suunnitelmat tai kuvat sekä toivottu aikataulu, niin keskustellaan seuraavista vaiheista.",
+        "uk": "Монтаж і оздоблення відповідно до особливостей об’єкта та погодженого обсягу.\n\nПеред індивідуальним кошторисом оцінюємо завдання, умови об’єкта та необхідну координацію. Обсяг робіт, відповідальність і строки фіксуємо в письмовому договорі.\n\nПовідомте місце, додайте наявні плани або фото та бажані строки, щоб обговорити наступні кроки."
+      },
+      "category": {
+        "en": "Construction services",
+        "fi": "Rakennuspalvelut",
+        "uk": "Будівельні послуги"
+      },
+      "location": "",
+      "image": "/static/images/interior.webp",
+      "gallery": [
+        "/static/images/interior.webp"
+      ],
+      "area": "",
+      "year": "",
+      "seo": {
+        "en": {
+          "title": "Interior construction | SVM Rakennus",
+          "description": "Installation and finishing work, coordinated around the agreed scope and the building.",
+          "image": ""
+        },
+        "fi": {
+          "title": "Sisäpuoliset rakennustyöt | SVM Rakennus",
+          "description": "Asennus- ja viimeistelytyöt kohteen ja sovitun työn laajuuden mukaan.",
+          "image": ""
+        }
+      }
+    },
+    {
+      "id": "terraces",
+      "slug": "terraces",
+      "enabled": true,
+      "demo": false,
+      "title": {
+        "en": "Terraces & outdoor spaces",
+        "fi": "Terassit ja ulkotilat",
+        "uk": "Тераси й зовнішні простори"
+      },
+      "summary": {
+        "en": "Practical timber terraces and outdoor spaces planned for the way you use your property.",
+        "fi": "Käytännölliset puuterassit ja ulkotilat kiinteistön käyttötarpeiden mukaan.",
+        "uk": "Практичні дерев’яні тераси й зовнішні простори з урахуванням потреб використання."
+      },
+      "body": {
+        "en": "Practical timber terraces and outdoor spaces planned for the way you use your property.\n\nWe assess the task, site conditions and required coordination before preparing an individual estimate. The scope, responsibilities and schedule are agreed in a written contract.\n\nContact us with the location, available plans or photos, and your preferred schedule to discuss the next steps.",
+        "fi": "Käytännölliset puuterassit ja ulkotilat kiinteistön käyttötarpeiden mukaan.\n\nArvioimme tehtävän, kohteen olosuhteet ja tarvittavan yhteensovittamisen ennen yksilöllistä kustannusarviota. Työn laajuus, vastuut ja aikataulu sovitaan kirjallisessa sopimuksessa.\n\nOta yhteyttä ja kerro sijainti, mahdolliset suunnitelmat tai kuvat sekä toivottu aikataulu, niin keskustellaan seuraavista vaiheista.",
+        "uk": "Практичні дерев’яні тераси й зовнішні простори з урахуванням потреб використання.\n\nПеред індивідуальним кошторисом оцінюємо завдання, умови об’єкта та необхідну координацію. Обсяг робіт, відповідальність і строки фіксуємо в письмовому договорі.\n\nПовідомте місце, додайте наявні плани або фото та бажані строки, щоб обговорити наступні кроки."
+      },
+      "category": {
+        "en": "Construction services",
+        "fi": "Rakennuspalvelut",
+        "uk": "Будівельні послуги"
+      },
+      "location": "",
+      "image": "/static/images/terrace.webp",
+      "gallery": [
+        "/static/images/terrace.webp"
+      ],
+      "area": "",
+      "year": "",
+      "seo": {
+        "en": {
+          "title": "Terraces & outdoor spaces | SVM Rakennus",
+          "description": "Practical timber terraces and outdoor spaces planned for the way you use your property.",
+          "image": ""
+        },
+        "fi": {
+          "title": "Terassit ja ulkotilat | SVM Rakennus",
+          "description": "Käytännölliset puuterassit ja ulkotilat kiinteistön käyttötarpeiden mukaan.",
+          "image": ""
+        }
+      }
+    },
+    {
+      "id": "balconies",
+      "slug": "balconies",
+      "enabled": true,
+      "demo": false,
+      "title": {
+        "en": "Balconies & glazing",
+        "fi": "Parvekkeet ja parvekelasit",
+        "uk": "Балкони та скління"
+      },
+      "summary": {
+        "en": "Balcony installation and glazing work assessed individually for the building and project.",
+        "fi": "Parvekeasennukset ja lasitustyöt arvioidaan kohde- ja hankekohtaisesti.",
+        "uk": "Монтаж балконів і скління оцінюємо індивідуально для кожної будівлі й проєкту."
+      },
+      "body": {
+        "en": "Balcony installation and glazing work assessed individually for the building and project.\n\nWe assess the task, site conditions and required coordination before preparing an individual estimate. The scope, responsibilities and schedule are agreed in a written contract.\n\nContact us with the location, available plans or photos, and your preferred schedule to discuss the next steps.",
+        "fi": "Parvekeasennukset ja lasitustyöt arvioidaan kohde- ja hankekohtaisesti.\n\nArvioimme tehtävän, kohteen olosuhteet ja tarvittavan yhteensovittamisen ennen yksilöllistä kustannusarviota. Työn laajuus, vastuut ja aikataulu sovitaan kirjallisessa sopimuksessa.\n\nOta yhteyttä ja kerro sijainti, mahdolliset suunnitelmat tai kuvat sekä toivottu aikataulu, niin keskustellaan seuraavista vaiheista.",
+        "uk": "Монтаж балконів і скління оцінюємо індивідуально для кожної будівлі й проєкту.\n\nПеред індивідуальним кошторисом оцінюємо завдання, умови об’єкта та необхідну координацію. Обсяг робіт, відповідальність і строки фіксуємо в письмовому договорі.\n\nПовідомте місце, додайте наявні плани або фото та бажані строки, щоб обговорити наступні кроки."
+      },
+      "category": {
+        "en": "Construction services",
+        "fi": "Rakennuspalvelut",
+        "uk": "Будівельні послуги"
+      },
+      "location": "",
+      "image": "/static/images/hero.webp",
+      "gallery": [
+        "/static/images/hero.webp"
+      ],
+      "area": "",
+      "year": "",
+      "seo": {
+        "en": {
+          "title": "Balconies & glazing | SVM Rakennus",
+          "description": "Balcony installation and glazing work assessed individually for the building and project.",
+          "image": ""
+        },
+        "fi": {
+          "title": "Parvekkeet ja parvekelasit | SVM Rakennus",
+          "description": "Parvekeasennukset ja lasitustyöt arvioidaan kohde- ja hankekohtaisesti.",
+          "image": ""
+        }
+      }
+    },
+    {
+      "id": "firestopping",
+      "slug": "firestopping",
+      "enabled": true,
+      "demo": false,
+      "title": {
+        "en": "Fire stopping",
+        "fi": "Palokatkotyöt",
+        "uk": "Протипожежна герметизація проходок"
+      },
+      "summary": {
+        "en": "Sealing service penetrations as part of the project’s defined fire-stopping requirements.",
+        "fi": "Taloteknisten läpivientien tiivistys hankkeen määriteltyjen palokatkovaatimusten mukaisesti.",
+        "uk": "Ущільнення інженерних проходок відповідно до визначених протипожежних вимог проєкту."
+      },
+      "body": {
+        "en": "Sealing service penetrations as part of the project’s defined fire-stopping requirements.\n\nWe assess the task, site conditions and required coordination before preparing an individual estimate. The scope, responsibilities and schedule are agreed in a written contract.\n\nContact us with the location, available plans or photos, and your preferred schedule to discuss the next steps.",
+        "fi": "Taloteknisten läpivientien tiivistys hankkeen määriteltyjen palokatkovaatimusten mukaisesti.\n\nArvioimme tehtävän, kohteen olosuhteet ja tarvittavan yhteensovittamisen ennen yksilöllistä kustannusarviota. Työn laajuus, vastuut ja aikataulu sovitaan kirjallisessa sopimuksessa.\n\nOta yhteyttä ja kerro sijainti, mahdolliset suunnitelmat tai kuvat sekä toivottu aikataulu, niin keskustellaan seuraavista vaiheista.",
+        "uk": "Ущільнення інженерних проходок відповідно до визначених протипожежних вимог проєкту.\n\nПеред індивідуальним кошторисом оцінюємо завдання, умови об’єкта та необхідну координацію. Обсяг робіт, відповідальність і строки фіксуємо в письмовому договорі.\n\nПовідомте місце, додайте наявні плани або фото та бажані строки, щоб обговорити наступні кроки."
+      },
+      "category": {
+        "en": "Construction services",
+        "fi": "Rakennuspalvelut",
+        "uk": "Будівельні послуги"
+      },
+      "location": "",
+      "image": "/static/images/craft.webp",
+      "gallery": [
+        "/static/images/craft.webp"
+      ],
+      "area": "",
+      "year": "",
+      "seo": {
+        "en": {
+          "title": "Fire stopping | SVM Rakennus",
+          "description": "Sealing service penetrations as part of the project’s defined fire-stopping requirements.",
+          "image": ""
+        },
+        "fi": {
+          "title": "Palokatkotyöt | SVM Rakennus",
+          "description": "Taloteknisten läpivientien tiivistys hankkeen määriteltyjen palokatkovaatimusten mukaisesti.",
+          "image": ""
+        }
+      }
+    }
+  ],
+  "projects": [
+    {
+      "id": "home-renovation",
+      "slug": "home-renovation",
+      "enabled": true,
+      "demo": true,
+      "title": {
+        "en": "A considered home renovation",
+        "fi": "Huolellinen kodin saneeraus",
+        "uk": "Ретельна реновація житла"
+      },
+      "summary": {
+        "en": "Illustrative project entry. Replace this with a real completed project and its photographs.",
+        "fi": "Kuvituksellinen esimerkkikohde. Korvaa tämä toteutuneella kohteella ja sen valokuvilla.",
+        "uk": "Ілюстративний приклад об’єкта. Замініть його справжнім завершеним проєктом і фотографіями."
+      },
+      "body": {
+        "en": "This is a demonstration of the portfolio layout, not a completed client project.\n\nAdd the project background, the work carried out, technical details and the final result. Publish only information and photographs you have permission to use.",
+        "fi": "Tämä havainnollistaa referenssisivun rakennetta, eikä ole toteutunut asiakaskohde.\n\nLisää kohteen tausta, tehdyt työt, tekniset tiedot ja lopputulos. Julkaise vain tietoja ja kuvia, joiden käyttöön sinulla on lupa.",
+        "uk": "Це демонстрація структури портфоліо, а не виконаний об’єкт замовника.\n\nДодайте передумови проєкту, виконані роботи, технічні подробиці й результат. Публікуйте лише дозволені до використання відомості та фотографії."
+      },
+      "category": {
+        "en": "Renovation",
+        "fi": "Saneeraus",
+        "uk": "Реновація"
+      },
+      "location": "Suomi · esimerkki",
+      "image": "/static/images/interior.webp",
+      "gallery": [
+        "/static/images/interior.webp"
+      ],
+      "area": "",
+      "year": "",
+      "seo": {
+        "en": {
+          "title": "",
+          "description": "",
+          "image": ""
+        },
+        "fi": {
+          "title": "",
+          "description": "",
+          "image": ""
+        }
+      }
+    },
+    {
+      "id": "timber-terrace",
+      "slug": "timber-terrace",
+      "enabled": true,
+      "demo": true,
+      "title": {
+        "en": "A place to spend more time outdoors",
+        "fi": "Enemmän aikaa ulkona",
+        "uk": "Більше часу на відкритому повітрі"
+      },
+      "summary": {
+        "en": "Illustrative project entry. Replace this with a real completed project and its photographs.",
+        "fi": "Kuvituksellinen esimerkkikohde. Korvaa tämä toteutuneella kohteella ja sen valokuvilla.",
+        "uk": "Ілюстративний приклад об’єкта. Замініть його справжнім завершеним проєктом і фотографіями."
+      },
+      "body": {
+        "en": "This is a demonstration of the portfolio layout, not a completed client project.\n\nAdd the project background, the work carried out, technical details and the final result. Publish only information and photographs you have permission to use.",
+        "fi": "Tämä havainnollistaa referenssisivun rakennetta, eikä ole toteutunut asiakaskohde.\n\nLisää kohteen tausta, tehdyt työt, tekniset tiedot ja lopputulos. Julkaise vain tietoja ja kuvia, joiden käyttöön sinulla on lupa.",
+        "uk": "Це демонстрація структури портфоліо, а не виконаний об’єкт замовника.\n\nДодайте передумови проєкту, виконані роботи, технічні подробиці й результат. Публікуйте лише дозволені до використання відомості та фотографії."
+      },
+      "category": {
+        "en": "Terrace",
+        "fi": "Terassi",
+        "uk": "Тераса"
+      },
+      "location": "Suomi · esimerkki",
+      "image": "/static/images/terrace.webp",
+      "gallery": [
+        "/static/images/terrace.webp"
+      ],
+      "area": "",
+      "year": "",
+      "seo": {
+        "en": {
+          "title": "",
+          "description": "",
+          "image": ""
+        },
+        "fi": {
+          "title": "",
+          "description": "",
+          "image": ""
+        }
+      }
+    },
+    {
+      "id": "timber-home",
+      "slug": "timber-home",
+      "enabled": true,
+      "demo": true,
+      "title": {
+        "en": "New life for an existing home",
+        "fi": "Uusi elämä vanhalle kodille",
+        "uk": "Нове життя старого будинку"
+      },
+      "summary": {
+        "en": "Illustrative project entry. Replace this with a real completed project and its photographs.",
+        "fi": "Kuvituksellinen esimerkkikohde. Korvaa tämä toteutuneella kohteella ja sen valokuvilla.",
+        "uk": "Ілюстративний приклад об’єкта. Замініть його справжнім завершеним проєктом і фотографіями."
+      },
+      "body": {
+        "en": "This is a demonstration of the portfolio layout, not a completed client project.\n\nAdd the project background, the work carried out, technical details and the final result. Publish only information and photographs you have permission to use.",
+        "fi": "Tämä havainnollistaa referenssisivun rakennetta, eikä ole toteutunut asiakaskohde.\n\nLisää kohteen tausta, tehdyt työt, tekniset tiedot ja lopputulos. Julkaise vain tietoja ja kuvia, joiden käyttöön sinulla on lupa.",
+        "uk": "Це демонстрація структури портфоліо, а не виконаний об’єкт замовника.\n\nДодайте передумови проєкту, виконані роботи, технічні подробиці й результат. Публікуйте лише дозволені до використання відомості та фотографії."
+      },
+      "category": {
+        "en": "Renovation & exterior",
+        "fi": "Saneeraus ja ulkotilat",
+        "uk": "Реновація та зовнішні роботи"
+      },
+      "location": "Suomi · esimerkki",
+      "image": "/static/images/hero.webp",
+      "gallery": [
+        "/static/images/hero.webp"
+      ],
+      "area": "",
+      "year": "",
+      "seo": {
+        "en": {
+          "title": "",
+          "description": "",
+          "image": ""
+        },
+        "fi": {
+          "title": "",
+          "description": "",
+          "image": ""
+        }
+      }
+    }
+  ],
+  "faqs": [
+    {
+      "question": {
+        "en": "Do you work with homeowners and businesses?",
+        "fi": "Palveletteko yksityisiä ja yrityksiä?",
+        "uk": "Ви працюєте з приватними замовниками та бізнесом?"
+      },
+      "answer": {
+        "en": "Yes. We work with private property owners and businesses, including subcontracting for construction companies.",
+        "fi": "Kyllä. Palvelemme yksityisiä kiinteistönomistajia ja yrityksiä sekä toimimme rakennusyritysten aliurakoitsijana.",
+        "uk": "Так. Працюємо з приватними власниками й компаніями, зокрема як субпідрядники будівельних компаній."
+      }
+    },
+    {
+      "question": {
+        "en": "Can you take on just one work package?",
+        "fi": "Voitteko toteuttaa vain yhden työvaiheen?",
+        "uk": "Можна замовити лише один етап робіт?"
+      },
+      "answer": {
+        "en": "Yes. We can agree an individual contract for demolition or another defined work package, or discuss a complete project.",
+        "fi": "Kyllä. Voimme sopia erillisestä purku- tai muusta määritellystä työurakasta tai keskustella koko hankkeen toteutuksesta.",
+        "uk": "Так. Можемо погодити окремий демонтажний або інший визначений підряд чи обговорити реалізацію цілого проєкту."
+      }
+    },
+    {
+      "question": {
+        "en": "How is the project price calculated?",
+        "fi": "Miten hankkeen hinta lasketaan?",
+        "uk": "Як розраховується вартість проєкту?"
+      },
+      "answer": {
+        "en": "Each project is assessed individually. The estimate depends on the scope, site conditions, materials, schedule and responsibilities.",
+        "fi": "Jokainen hanke arvioidaan yksilöllisesti. Kustannusarvio riippuu työn laajuudesta, kohteen olosuhteista, materiaaleista, aikataulusta ja vastuista.",
+        "uk": "Кожен проєкт оцінюємо індивідуально. Кошторис залежить від обсягу, умов об’єкта, матеріалів, строків і відповідальності."
+      }
+    },
+    {
+      "question": {
+        "en": "How are payment terms agreed?",
+        "fi": "Miten maksuehdot sovitaan?",
+        "uk": "Як погоджуються умови оплати?"
+      },
+      "answer": {
+        "en": "The price and payment stages are recorded in a written project agreement before work starts.",
+        "fi": "Hinta ja maksuerät kirjataan kirjalliseen hankesopimukseen ennen töiden aloitusta.",
+        "uk": "Ціну та етапи оплати фіксуємо в письмовому договорі до початку робіт."
+      }
+    },
+    {
+      "question": {
+        "en": "What should I send with my enquiry?",
+        "fi": "Mitä tietoja lähetän tiedustelun mukana?",
+        "uk": "Що надати разом зі зверненням?"
+      },
+      "answer": {
+        "en": "The location, a short description of the work and your preferred schedule. Photos or plans can help us understand the task.",
+        "fi": "Kohteen sijainti, lyhyt työn kuvaus ja toivottu aikataulu. Kuvat tai suunnitelmat auttavat ymmärtämään tehtävää.",
+        "uk": "Місце, короткий опис робіт і бажані строки. Фото або плани допоможуть зрозуміти завдання."
+      }
+    }
+  ],
+  "reviews": [],
+  "documents": [],
+  "seo": {
+    "en": {
+      "title": "SVM Rakennus | Renovation & construction in Finland",
+      "description": "A dependable construction partner for renovation, demolition, interior work, terraces, balcony glazing and fire stopping. Written agreements and individual estimates.",
+      "image": "/static/images/hero.webp"
+    },
+    "fi": {
+      "title": "SVM Rakennus | Saneeraus ja rakennustyöt Suomessa",
+      "description": "Luotettava kumppani saneeraukseen, purkutöihin, sisärakentamiseen, terasseihin, parvekelasitukseen ja palokatkotöihin. Kirjalliset sopimukset ja yksilölliset kustannusarviot.",
+      "image": "/static/images/hero.webp"
+    }
+  },
+  "tracking": {
+    "mode": "direct",
+    "ga4": "",
+    "ads": "",
+    "gtm": "",
+    "meta": "",
+    "linkedIn": "",
+    "tikTok": "",
+    "events": {
+      "generate_lead": {
+        "enabled": true,
+        "ga": "generate_lead",
+        "adsLabel": "",
+        "meta": "Lead",
+        "linkedIn": "",
+        "tikTok": "Lead"
+      },
+      "phone_click": {
+        "enabled": true,
+        "ga": "phone_click",
+        "adsLabel": "",
+        "meta": "Contact",
+        "linkedIn": "",
+        "tikTok": "Contact"
+      },
+      "email_click": {
+        "enabled": true,
+        "ga": "email_click",
+        "adsLabel": "",
+        "meta": "Contact",
+        "linkedIn": "",
+        "tikTok": "Contact"
+      },
+      "file_download": {
+        "enabled": true,
+        "ga": "file_download",
+        "adsLabel": "",
+        "meta": "",
+        "linkedIn": "",
+        "tikTok": "Download"
+      },
+      "form_start": {
+        "enabled": true,
+        "ga": "form_start",
+        "adsLabel": "",
+        "meta": "",
+        "linkedIn": "",
+        "tikTok": ""
+      },
+      "service_view": {
+        "enabled": true,
+        "ga": "service_view",
+        "adsLabel": "",
+        "meta": "ViewContent",
+        "linkedIn": "",
+        "tikTok": "ViewContent"
+      },
+      "project_view": {
+        "enabled": true,
+        "ga": "project_view",
+        "adsLabel": "",
+        "meta": "ViewContent",
+        "linkedIn": "",
+        "tikTok": "ViewContent"
+      },
+      "scroll_depth": {
+        "enabled": true,
+        "ga": "scroll_depth",
+        "adsLabel": "",
+        "meta": "",
+        "linkedIn": "",
+        "tikTok": ""
+      }
+    }
+  },
+  "auth": {
+    "hash": "",
+    "version": 0,
+    "changed": false
+  },
+  "redirects": []
+}
