@@ -34,7 +34,9 @@ elif [[ "$database_location" != "$SITE_REGION" ]]; then
   echo "Existing database is in $database_location; expected $SITE_REGION. No replacement was created." >&2
   exit 1
 fi
-bucket_name="$(gcloud storage buckets list --filter="name=$SITE_BUCKET" --format='value(name)' --project "$PROJECT_ID")"
+# URI output has no metadata filter keys and also handles an empty project.
+bucket_urls="$(gcloud storage buckets list --uri --project "$PROJECT_ID")"
+bucket_name="$(python3 -c 'import sys; target=sys.argv[1].rstrip("/"); print(target if any(line.strip().rstrip("/")==target for line in sys.stdin) else "")' "gs://$SITE_BUCKET" <<< "$bucket_urls")"
 if [[ -z "$bucket_name" ]]; then
   gcloud storage buckets create "gs://$SITE_BUCKET" --location "$SITE_REGION" --uniform-bucket-level-access --public-access-prevention --project "$PROJECT_ID"
 else

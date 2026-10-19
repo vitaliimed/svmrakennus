@@ -82,3 +82,11 @@ gcloud run services proxy svm-rakennus \
 Для запуска нужны подтверждённые контакты, реквизиты и зона работ; реальные объекты и права на фотографии; домен/DNS/TLS и canonical; проверенные юридические страницы; SMTP и тестовая доставка; ID аналитики/рекламы и проверка согласия. После этого отключаются demo и noindex, проверяются robots/sitemap и выполняется явный `bash scripts/deploy-cloud-run.sh --public`.
 
 Актуальные первичные документы: [build service account](https://docs.cloud.google.com/run/docs/configuring/services/build-service-account), [Cloud Run deploy](https://docs.cloud.google.com/sdk/gcloud/reference/run/deploy), [публичный доступ](https://docs.cloud.google.com/run/docs/authenticating/public), [Firestore databases](https://docs.cloud.google.com/firestore/native/docs/manage-databases), [Go releases](https://go.dev/dl/).
+
+## Проверка в Cloud Shell — 19.10.2026
+
+По переданному оператором выводу версия `17ca7ba` прошла `verify.sh`; bootstrap завершился успешно. Созданы Firestore Native `svm-rakennus` в `europe-north1` с защитой удаления, bucket сайта, версии 1 секретов session/admin-password; команды назначения IAM завершились без ошибок. Рабочая конфигурация `.deployment.env` записана. На этом шаге Cloud Run ещё не развёрнут.
+
+Предупреждение `filter keys were not present ... name` появилось перед первым созданием bucket и не остановило подготовку. Для последующих запусков получение списка заменено на `--uri` с точным сравнением адресов; обработка ошибок получения списка проверена отдельно. Повторный bootstrap для следующего шага не нужен.
+
+Следующий шаг — `bash scripts/deploy-cloud-run.sh --private`, затем `gcloud run services proxy` и Cloud Shell Web Preview на порту 8080. Окно с proxy оставляется открытым во время просмотра. Админпароль — введённый при bootstrap.

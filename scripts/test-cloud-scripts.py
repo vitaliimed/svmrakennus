@@ -23,7 +23,11 @@ elif a[:3]==['firestore','databases','list']:
   path.write_text(json.dumps(s));sys.exit(1)
  out=json.dumps([{'name':'projects/test/databases/svm-rakennus','type':'FIRESTORE_NATIVE','locationId':s.get('database_location','europe-north1')}] if s.get('database') else [])
 elif a[:3]==['firestore','databases','create']:s['database']=True
-elif a[:3]==['storage','buckets','list']:out='test-bucket' if s.get('bucket') else ''
+elif a[:3]==['storage','buckets','list']:
+ assert '--uri' in a and not any(x.startswith('--filter') for x in a)
+ if s.get('deny_bucket_list'):
+  path.write_text(json.dumps(s));sys.exit(1)
+ out='gs://unrelated-bucket/\ngs://project-c6c1d639-9739-4837-9c8-svm-rakennus-media/' if s.get('bucket') else ''
 elif a[:3]==['storage','buckets','describe']:out=s.get('bucket_location','EUROPE-NORTH1')
 elif a[:3]==['storage','buckets','create']:s['bucket']=True
 elif a[:2]==['secrets','describe']:
@@ -92,7 +96,8 @@ with tempfile.TemporaryDirectory(prefix='svm-cloud-tests-') as directory:
     assert '--no-invoker-iam-check' in public
 
     for failure in ({'disabled': True}, {'deny_database': True},
-                    {'database': True, 'database_location': 'us-central1'}):
+                    {'database': True, 'database_location': 'us-central1'},
+                    {'database': True, 'deny_bucket_list': True}):
         save(failure)
         run('bootstrap-gcloud.sh', PROJECT, ok=False)
         assert not any('create' in c for c in state()['calls'])

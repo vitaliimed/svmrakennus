@@ -21,3 +21,9 @@ PASS git diff --check
 Screenshots: docs/qa/contrast-desktop.jpg, docs/qa/contrast-mobile.jpg.
 Not executed: Docker/Cloud Build; live GCP IAM/Firestore/GCS; actual SMTP delivery;
 advertising platform event reception. No Cloud Run deployment performed.
+
+Cloud Shell follow-up (operator-provided log, 2026-10-19): verify.sh PASS,
+bootstrap completed; Firestore Native europe-north1, bucket and secret versions 1
+created; IAM update commands completed. Cloud Run not deployed yet.
+Bootstrap bucket lookup now uses exact URI matching; empty/existing list and
+permission failure scenarios verified with the mock CLI.
