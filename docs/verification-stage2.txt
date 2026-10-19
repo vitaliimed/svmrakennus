@@ -1,0 +1,23 @@
+SVM Rakennus Stage 2 — 2026-10-19
+Baseline: main 48e072366cdb4936d136f82b687de28a09abbc23
+Selected reference: docs/Contrast-selected.html (unchanged)
+Environment: Linux amd64, Go 1.26.9; Node.js; Python 3; Chromium 151.0.7922.34.
+
+PASS bash scripts/verify.sh:
+  gofmt, go vet, go test -race -count=1 ./... (14 test functions), Go build
+  JS syntax and editor/tracking tests
+  shell syntax, content/translations, Contrast copy/assets/theme/CSS comparison
+  isolated mock gcloud tests for bootstrap and private/public deploy
+PASS CGO_ENABLED=0 go build -buildvcs=false -trimpath -o build/server ./cmd/server
+PASS Chromium browser QA:
+  FI and EN at widths 1440, 768, 390, 360; no horizontal overflow
+  Finnish hero dimensions, typography, colors and heading match selected HTML at each width
+  Mobile menu open/Escape, service/project detail and legal pages
+  Successful local form submission; campaign UTM saved in lead
+  Ukrainian admin login, 15 navigation tabs, saved enquiry visible through admin API
+  No page JavaScript errors or third-party vendor requests in tested scenarios
+PASS git diff --check
+
+Screenshots: docs/qa/contrast-desktop.jpg, docs/qa/contrast-mobile.jpg.
+Not executed: Docker/Cloud Build; live GCP IAM/Firestore/GCS; actual SMTP delivery;
+advertising platform event reception. No Cloud Run deployment performed.

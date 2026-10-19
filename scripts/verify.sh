@@ -15,4 +15,6 @@ node scripts/test-tracking.cjs
 node scripts/test-admin.cjs
 for file in scripts/*.sh; do bash -n "$file"; done
 python3 scripts/check-content.py
+python3 scripts/check-contrast.py
+python3 scripts/test-cloud-scripts.py
 echo 'All checks passed.'
