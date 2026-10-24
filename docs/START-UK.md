@@ -1,3 +1,5 @@
+> Актуальний стан і порядок запуску: [етап 2](STAGE2-RU.md). Обраний дизайн — 01 Contrast.
+
 # SVM Rakennus: швидкий запуск
 
 Сайт фінською за замовчуванням, друга мова англійська. Кабінет українською; поруч із фінськими текстами є редаговані переклади й словник термінів.
@@ -20,11 +22,11 @@ go run ./cmd/server
 unzip SVM-Rakennus-Go-CloudRun.zip
 cd svm-rakennus
 bash scripts/bootstrap-gcloud.sh YOUR_PROJECT_ID
-bash scripts/deploy-cloud-run.sh
+bash scripts/deploy-cloud-run.sh --private
 bash scripts/configure-email.sh
 ```
 
-Замініть `YOUR_PROJECT_ID` реальним ID. За замовчуванням сервіс має назву `svm-rakennus`, регіон `europe-north1`. Firestore і Cloud Storage зберігають контент та файли між випусками. Скрипти не переналаштовують інші сервіси.
+Замініть `YOUR_PROJECT_ID` реальним ID. Акаунти `svm-build` і `svm-runtime` мають уже існувати в цьому проєкті. Bootstrap запитує пароль 12–256 символів; режим `--private` вимагає Google IAM, публічний випуск виконується окремо з `--public`. За замовчуванням сервіс має назву `svm-rakennus`, регіон `europe-north1`. Firestore і Cloud Storage зберігають контент та файли між випусками. Скрипти не переналаштовують інші сервіси.
 
 ## Початкове заповнення
 
