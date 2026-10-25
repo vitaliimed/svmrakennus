@@ -18,7 +18,7 @@ function checkPaths(html){for(const match of html.matchAll(/data-path="([^"]+)"/
  assert.equal((element('#admin-nav').innerHTML.match(/data-tab=/g)||[]).length,15);
  const tabs=['overview','general','text','sections','services','projects','media','faqs','documents','reviews','seo','tracking','leads','glossary','system'];
  for(const tab of tabs){const html=await click({tab});assert(html.length>50,`Empty tab ${tab}`);assert(!/[ыэёЫЭЁъЪ]/.test(html),`Russian text in ${tab}`);assert(!html.includes('undefined'),'Unresolved value in '+tab);checkPaths(html);}
- let html=await click({tab:'text'});assert(html.includes('Переклад українською'));assert(html.includes('Uusi elämä'));assert(!html.includes('English — англійська</label>'),'Default mode must focus Finnish/Ukrainian');
+ let html=await click({tab:'text'});assert(html.includes('Переклад українською'));assert(html.includes('Hyvät rakennukset.'));assert(!html.includes('English — англійська</label>'),'Default mode must focus Finnish/Ukrainian');
  html=await click({editItem:'services:5'});assert(html.includes('Palokatkotyöt')&&html.includes('Протипожежна'));assert(html.includes('english-fold'));checkPaths(html);
  html=await click({tab:'general'});assert(html.includes('Yrityksen nimi — назва компанії'));assert(html.includes('Скандинавське оформлення'));
  await click({tab:'text'});
