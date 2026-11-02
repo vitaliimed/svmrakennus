@@ -109,7 +109,7 @@ func (a *App) readToken(v string) (session, error) {
 	return s, nil
 }
 func (a *App) session(r *http.Request, state State) (session, error) {
-	c, e := r.Cookie("svm_session")
+	c, e := r.Cookie("__session")
 	if e != nil {
 		return session{}, e
 	}
@@ -123,7 +123,7 @@ func (a *App) session(r *http.Request, state State) (session, error) {
 	return s, nil
 }
 func (a *App) cookie(w http.ResponseWriter, r *http.Request, value string, age int) {
-	http.SetCookie(w, &http.Cookie{Name: "svm_session", Value: value, Path: "/", HttpOnly: true, Secure: a.production || r.TLS != nil, SameSite: http.SameSiteStrictMode, MaxAge: age})
+	http.SetCookie(w, &http.Cookie{Name: "__session", Value: value, Path: "/", HttpOnly: true, Secure: a.production || r.TLS != nil, SameSite: http.SameSiteStrictMode, MaxAge: age})
 }
 func sameOrigin(r *http.Request) bool {
 	v := r.Header.Get("Origin")
