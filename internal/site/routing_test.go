@@ -77,10 +77,17 @@ func TestCanonicalLanguageRoutesAndInternalLinks(t *testing.T) {
 		}
 	}
 
+	for _, unknown := range []string{"/unknown", "/unknown/", "/en/unknown", "/en/unknown/", "/fi/unknown"} {
+		w := request(a, "GET", unknown, nil, nil, "")
+		if w.Code != 404 {
+			t.Errorf("unknown path %q must return 404, got %d", unknown, w.Code)
+		}
+	}
 	for old, target := range map[string]string{
 		"/fi": "/",
 		"/fi/": "/",
 		"/fi/services/renovation/": "/services/renovation/",
+		"/fi/services/renovation": "/services/renovation/",
 		"/fi/projects/home-renovation/": "/projects/home-renovation/",
 		"/fi/privacy/": "/privacy/",
 		"/en": "/en/",
