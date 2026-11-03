@@ -5,7 +5,14 @@ import (
 	"regexp"
 )
 
-var redirectPath = regexp.MustCompile(`^/(en|fi)/((services|projects)/[a-z0-9][a-z0-9-]{0,79}/|(privacy|cookies|terms)/)?$`)
+var redirectPath = regexp.MustCompile(`^/(?:en/|fi/)?(?:(?:services|projects)/[a-z0-9][a-z0-9-]{0,79}/|(?:privacy|cookies|terms)/)?package site
+
+import (
+	"errors"
+	"regexp"
+)
+
+)
 
 func validateRedirects(rows []Redirect) error {
 	if len(rows) > 250 {
@@ -13,10 +20,15 @@ func validateRedirects(rows []Redirect) error {
 	}
 	paths := map[string]string{}
 	for _, r := range rows {
-		if !redirectPath.MatchString(r.From) || !redirectPath.MatchString(r.To) || r.From == r.To || paths[r.From] != "" {
-			return errors.New("redirects require unique internal EN/FI paths ending in / and cannot point to themselves")
+		if !redirectPath.MatchString(r.From) || !redirectPath.MatchString(r.To) {
+			return errors.New("redirects require internal Finnish or English paths ending in /")
 		}
-		paths[r.From] = r.To
+		from := stripFinnishPrefix(r.From)
+		to := stripFinnishPrefix(r.To)
+		if from == "/" || from == "/en/" || from == to || paths[from] != "" {
+			return errors.New("redirects must have unique source paths, cannot change language homes, and cannot point to themselves")
+		}
+		paths[from] = to
 	}
 	for from := range paths {
 		seen := map[string]bool{}
@@ -30,6 +42,11 @@ func validateRedirects(rows []Redirect) error {
 	return nil
 }
 func autoRedirects(old State, next *State) {
+	// Upgrade existing /fi/... redirects when settings are next saved.
+	for i := range next.Redirects {
+		next.Redirects[i].From = stripFinnishPrefix(next.Redirects[i].From)
+		next.Redirects[i].To = stripFinnishPrefix(next.Redirects[i].To)
+	}
 	for _, group := range []struct {
 		kind          string
 		before, after []Item
@@ -40,8 +57,8 @@ func autoRedirects(old State, next *State) {
 					continue
 				}
 				for _, lang := range []string{"en", "fi"} {
-					from := "/" + lang + "/" + group.kind + "/" + before.Slug + "/"
-					to := "/" + lang + "/" + group.kind + "/" + after.Slug + "/"
+					from := localizedPath(lang, "/"+group.kind+"/"+before.Slug+"/")
+					to := localizedPath(lang, "/"+group.kind+"/"+after.Slug+"/")
 					filtered := []Redirect{}
 					for _, r := range next.Redirects {
 						if r.From != to {
