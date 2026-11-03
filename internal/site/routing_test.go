@@ -1,6 +1,7 @@
 package site
 
 import (
+	"context"
 	"html"
 	"net/url"
 	"regexp"
@@ -10,7 +11,7 @@ import (
 
 func TestCanonicalLanguageRoutesAndInternalLinks(t *testing.T) {
 	a := testApp(t)
-	s, _, err := a.loadState(t.Context())
+	s, _, err := a.loadState(context.Background())
 	if err != nil {
 		t.Fatal(err)
 	}
