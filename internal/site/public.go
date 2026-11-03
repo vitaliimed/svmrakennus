@@ -22,6 +22,25 @@ type pageData struct {
 	Body                                                                       string
 }
 
+// localizedPath returns the canonical URL path: Finnish at /, English at /en/.
+func localizedPath(lang, tail string) string {
+	if lang == "en" {
+		return "/en" + tail
+	}
+	return tail
+}
+
+// stripFinnishPrefix maps historical /fi/... URLs onto canonical Finnish URLs.
+func stripFinnishPrefix(path string) string {
+	if path == "/fi" || path == "/fi/" {
+		return "/"
+	}
+	if strings.HasPrefix(path, "/fi/") {
+		return strings.TrimPrefix(path, "/fi")
+	}
+	return path
+}
+
 func (a *App) publicPage(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" && r.Method != "HEAD" {
 		fail(w, 405, "Method not allowed")
@@ -32,30 +51,38 @@ func (a *App) publicPage(w http.ResponseWriter, r *http.Request) {
 		fail(w, 503, "Website temporarily unavailable")
 		return
 	}
-	if r.URL.Path == "/" {
-		http.Redirect(w, r, "/"+s.Settings.MainLanguage+"/"+querySuffix(r), http.StatusFound)
-		return
-	}
+	path := r.URL.Path
+	canonicalPath := stripFinnishPrefix(path)
 	for _, redirect := range s.Redirects {
-		if r.URL.Path == redirect.From {
-			http.Redirect(w, r, redirect.To+querySuffix(r), http.StatusMovedPermanently)
-			return
+		from := stripFinnishPrefix(redirect.From)
+		if canonicalPath != "/" && canonicalPath == from {
+			to := stripFinnishPrefix(redirect.To)
+			if to != canonicalPath {
+				http.Redirect(w, r, to+querySuffix(r), http.StatusMovedPermanently)
+				return
+			}
 		}
 	}
-	path := r.URL.Path
-	parts := strings.Split(strings.Trim(path, "/"), "/")
-	if len(parts) == 0 || (parts[0] != "en" && parts[0] != "fi") {
-		http.NotFound(w, r)
+	if path != canonicalPath {
+		http.Redirect(w, r, canonicalPath+querySuffix(r), http.StatusMovedPermanently)
 		return
 	}
-	lang := parts[0]
+
+	parts := strings.Split(strings.Trim(path, "/"), "/")
+	lang := "fi"
+	if path == "/" {
+		parts = nil
+	} else if parts[0] == "en" {
+		lang = "en"
+		parts = parts[1:]
+	}
 	kind := "home"
 	var item Item
 	body := ""
 	tail := "/"
-	if len(parts) == 1 {
-		if path != "/"+lang+"/" {
-			http.Redirect(w, r, "/"+lang+"/"+querySuffix(r), http.StatusMovedPermanently)
+	if len(parts) == 0 {
+		if lang == "en" && path != "/en/" {
+			http.Redirect(w, r, "/en/"+querySuffix(r), http.StatusMovedPermanently)
 			return
 		}
 	} else {
@@ -63,17 +90,17 @@ func (a *App) publicPage(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, path+"/"+querySuffix(r), http.StatusMovedPermanently)
 			return
 		}
-		tail = "/" + strings.Join(parts[1:], "/") + "/"
+		tail = "/" + strings.Join(parts, "/") + "/"
 		switch {
-		case len(parts) == 3 && (parts[1] == "services" || parts[1] == "projects"):
-			kind = parts[1]
+		case len(parts) == 2 && (parts[0] == "services" || parts[0] == "projects"):
+			kind = parts[0]
 			list := s.Services
 			if kind == "projects" {
 				list = s.Projects
 			}
 			found := false
 			for _, v := range list {
-				if v.Enabled && v.Slug == parts[2] {
+				if v.Enabled && v.Slug == parts[1] {
 					item = v
 					found = true
 					break
@@ -83,10 +110,10 @@ func (a *App) publicPage(w http.ResponseWriter, r *http.Request) {
 				http.NotFound(w, r)
 				return
 			}
-		case len(parts) == 2 && (parts[1] == "privacy" || parts[1] == "cookies" || parts[1] == "terms"):
-			kind = parts[1]
+		case len(parts) == 1 && (parts[0] == "privacy" || parts[0] == "cookies" || parts[0] == "terms"):
+			kind = parts[0]
 			body = s.Text[lang][kind+".body"]
-		case len(parts) == 2 && parts[1] == "thank-you":
+		case len(parts) == 1 && parts[0] == "thank-you":
 			kind = "thank-you"
 		default:
 			http.NotFound(w, r)
@@ -116,7 +143,7 @@ func (a *App) publicPage(w http.ResponseWriter, r *http.Request) {
 	if seo.Image == "" {
 		seo.Image = s.Settings.HeroImage
 	}
-	d := pageData{State: s, Lang: lang, Path: tail, Type: kind, Item: item, Body: body, Canonical: base + "/" + lang + tail, EN: "/en" + tail, FI: "/fi" + tail, DefaultURL: base + "/" + s.Settings.MainLanguage + tail, Title: seo.Title, Description: seo.Description, Image: base + seo.Image, NoIndex: !s.Settings.Indexing || s.Settings.Demo || kind == "thank-you" || item.Demo, FormToken: a.makeToken(session{Exp: time.Now().Add(30 * time.Minute).Unix(), CSRF: randomID()})}
+	d := pageData{State: s, Lang: lang, Path: tail, Type: kind, Item: item, Body: body, Canonical: base + localizedPath(lang, tail), EN: localizedPath("en", tail), FI: localizedPath("fi", tail), DefaultURL: base + localizedPath("fi", tail), Title: seo.Title, Description: seo.Description, Image: base + seo.Image, NoIndex: !s.Settings.Indexing || s.Settings.Demo || kind == "thank-you" || item.Demo, FormToken: a.makeToken(session{Exp: time.Now().Add(30 * time.Minute).Unix(), CSRF: randomID()})}
 	labels := map[string]string{}
 	for _, key := range []string{"success", "error", "sending", "submit", "filesError", "rateError", "validationError", "tokenError"} {
 		labels[key] = s.Text[lang]["form."+key]
@@ -182,8 +209,8 @@ func (a *App) sitemap(w http.ResponseWriter, r *http.Request) {
 	}
 	list := []siteURL{}
 	if s.Settings.BaseURL != "" && s.Settings.Indexing && !s.Settings.Demo {
-		for _, lang := range []string{"en", "fi"} {
-			base := s.Settings.BaseURL + "/" + lang + "/"
+		for _, lang := range []string{"fi", "en"} {
+			base := s.Settings.BaseURL + localizedPath(lang, "/")
 			list = append(list, siteURL{base, s.Updated})
 			for _, group := range []struct {
 				kind  string
