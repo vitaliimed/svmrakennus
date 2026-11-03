@@ -438,6 +438,12 @@ func TestAutomaticRedirectAndCycleRejection(t *testing.T) {
 	if w.Code != 301 || w.Header().Get("Location") != "/services/updated-renovation/" {
 		t.Fatal("old service URL did not redirect")
 	}
+	for _, legacy := range []string{"/fi/services/" + old + "/", "/fi/services/" + old} {
+		w = request(a, "GET", legacy, nil, nil, "")
+		if w.Code != 301 || w.Header().Get("Location") != "/services/updated-renovation/" {
+			t.Fatalf("legacy service URL %s did not redirect directly: %d %s", legacy, w.Code, w.Header().Get("Location"))
+		}
+	}
 	if validateRedirects([]Redirect{{"/en/services/a/", "/services/a/"}, {"/services/a/", "/en/services/a/"}}) == nil {
 		t.Fatal("redirect cycle accepted")
 	}
