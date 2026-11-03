@@ -52,25 +52,27 @@ func (a *App) publicPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	path := r.URL.Path
+	// Normalize aliases and slashes only for matching; unknown paths must 404.
 	canonicalPath := stripFinnishPrefix(path)
+	routePath := canonicalPath
+	if routePath != "/" && !strings.HasSuffix(routePath, "/") {
+		routePath += "/"
+	}
+	// Resolve renamed URLs first, to avoid multiple redirect hops.
 	for _, redirect := range s.Redirects {
 		from := stripFinnishPrefix(redirect.From)
-		if canonicalPath != "/" && canonicalPath == from {
+		if routePath != "/" && routePath == from {
 			to := stripFinnishPrefix(redirect.To)
-			if to != canonicalPath {
+			if to != routePath {
 				http.Redirect(w, r, to+querySuffix(r), http.StatusMovedPermanently)
 				return
 			}
 		}
 	}
-	if path != canonicalPath {
-		http.Redirect(w, r, canonicalPath+querySuffix(r), http.StatusMovedPermanently)
-		return
-	}
 
-	parts := strings.Split(strings.Trim(path, "/"), "/")
+	parts := strings.Split(strings.Trim(routePath, "/"), "/")
 	lang := "fi"
-	if path == "/" {
+	if routePath == "/" {
 		parts = nil
 	} else if parts[0] == "en" {
 		lang = "en"
@@ -81,15 +83,8 @@ func (a *App) publicPage(w http.ResponseWriter, r *http.Request) {
 	body := ""
 	tail := "/"
 	if len(parts) == 0 {
-		if lang == "en" && path != "/en/" {
-			http.Redirect(w, r, "/en/"+querySuffix(r), http.StatusMovedPermanently)
-			return
-		}
+		// Canonical home pages are / and /en/.
 	} else {
-		if !strings.HasSuffix(path, "/") {
-			http.Redirect(w, r, path+"/"+querySuffix(r), http.StatusMovedPermanently)
-			return
-		}
 		tail = "/" + strings.Join(parts, "/") + "/"
 		switch {
 		case len(parts) == 2 && (parts[0] == "services" || parts[0] == "projects"):
@@ -119,6 +114,11 @@ func (a *App) publicPage(w http.ResponseWriter, r *http.Request) {
 			http.NotFound(w, r)
 			return
 		}
+	}
+	// Redirect a recognized URL only after verifying that the page exists.
+	if path != routePath {
+		http.Redirect(w, r, routePath+querySuffix(r), http.StatusMovedPermanently)
+		return
 	}
 	base := s.Settings.BaseURL
 	if base == "" {
