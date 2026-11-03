@@ -5,14 +5,7 @@ import (
 	"regexp"
 )
 
-var redirectPath = regexp.MustCompile(`^/(?:en/|fi/)?(?:(?:services|projects)/[a-z0-9][a-z0-9-]{0,79}/|(?:privacy|cookies|terms)/)?package site
-
-import (
-	"errors"
-	"regexp"
-)
-
-)
+var redirectPath = regexp.MustCompile(`^/(?:en/|fi/)?(?:(?:services|projects)/[a-z0-9][a-z0-9-]{0,79}/|(?:privacy|cookies|terms)/)?$`)
 
 func validateRedirects(rows []Redirect) error {
 	if len(rows) > 250 {
