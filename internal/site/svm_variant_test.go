@@ -9,8 +9,8 @@ import (
 func TestSVMFinnishDefaultAndUkrainianEditor(t *testing.T) {
 	a := testApp(t)
 	w := request(a, "GET", "/?utm_source=partner", nil, nil, "")
-	if w.Code != 302 || w.Header().Get("Location") != "/fi/?utm_source=partner" {
-		t.Fatalf("Finnish redirect lost language or campaign: %s", w.Header().Get("Location"))
+	if w.Code != 200 || !strings.Contains(w.Body.String(), `lang="fi"`) {
+		t.Fatalf("Finnish homepage must render at /: status %d", w.Code)
 	}
 	s, _, err := a.loadState(context.Background())
 	if err != nil || s.Settings.Company != "SVM Rakennus" || s.Settings.MainLanguage != "fi" {
@@ -20,7 +20,7 @@ func TestSVMFinnishDefaultAndUkrainianEditor(t *testing.T) {
 		t.Fatal("missing Ukrainian editorial translations")
 	}
 	for _, lang := range []string{"fi", "en"} {
-		html := request(a, "GET", "/"+lang+"/", nil, nil, "").Body.String()
+		html := request(a, "GET", localizedPath(lang, "/"), nil, nil, "").Body.String()
 		if strings.Contains(html, "NORDRA") || strings.Contains(html, "Новий проєкт") || strings.Contains(html, s.Text["uk"]["hero.title"]) {
 			t.Fatal("old brand or internal translation appeared in public HTML")
 		}
@@ -35,7 +35,7 @@ func TestSVMFinnishDefaultAndUkrainianEditor(t *testing.T) {
 	s.Settings.BaseURL = "https://svm.example.fi"
 	putState(t, a, s)
 	html = request(a, "GET", "/en/services/renovation/", nil, nil, "").Body.String()
-	if !strings.Contains(html, `hreflang="x-default" href="https://svm.example.fi/fi/services/renovation/"`) {
+	if !strings.Contains(html, `hreflang="x-default" href="https://svm.example.fi/services/renovation/"`) {
 		t.Fatal("default hreflang must point to the matching Finnish page")
 	}
 }
@@ -51,7 +51,7 @@ func TestSVMThemeValidationAndRendering(t *testing.T) {
 		t.Fatal(err)
 	}
 	putState(t, a, s)
-	html := request(a, "GET", "/fi/", nil, nil, "").Body.String()
+	html := request(a, "GET", "/", nil, nil, "").Body.String()
 	for _, token := range []string{`class="font-sans"`, "--paper:#faf9f4", "--ink:#18372a", "--surface:#e9efda"} {
 		if !strings.Contains(html, token) {
 			t.Fatalf("theme control missing: %s", token)
@@ -79,7 +79,7 @@ func TestSVMContactVisibilityOnDetailPages(t *testing.T) {
 		}
 	}
 	putState(t, a, s)
-	for _, path := range []string{"/fi/", "/en/", "/fi/services/renovation/", "/en/projects/home-renovation/"} {
+	for _, path := range []string{"/", "/en/", "/services/renovation/", "/en/projects/home-renovation/"} {
 		html := request(a, "GET", path, nil, nil, "").Body.String()
 		if strings.Contains(html, `id="lead-form"`) || strings.Contains(html, `id="contact"`) {
 			t.Fatalf("disabled contact still appears on %s", path)
