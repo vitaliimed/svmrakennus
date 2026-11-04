@@ -78,6 +78,7 @@ type session struct {
 	Exp     int64  `json:"exp"`
 	Version int    `json:"v"`
 	CSRF    string `json:"csrf"`
+	UserID  string `json:"uid,omitempty"`
 }
 
 func (a *App) sign(b []byte) string {
@@ -118,7 +119,14 @@ func (a *App) session(r *http.Request, state State) (session, error) {
 	if e != nil {
 		return s, e
 	}
-	if s.Version != state.Auth.Version {
+	if s.UserID != "" {
+		u, _, err := a.loadUser(r.Context(), s.UserID)
+		if err != nil || u.Version != s.Version || u.Status != "active" || !u.Verified || u.Hash == "" {
+			return s, errors.New("user session revoked")
+		}
+		return s, nil
+	}
+	if s.Version != state.Auth.Version || (ownerEmail() != "" && a.hasActiveOwner(r.Context())) {
 		return s, errors.New("session revoked")
 	}
 	return s, nil

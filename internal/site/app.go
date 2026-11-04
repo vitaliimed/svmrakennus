@@ -17,13 +17,14 @@ import (
 )
 
 type App struct {
-	store      Store
-	files      fs.FS
-	templates  *template.Template
-	secret     []byte
-	production bool
-	rates      limiter
-	mailer     func(context.Context, State, Lead, bool) error
+	store         Store
+	files         fs.FS
+	templates     *template.Template
+	secret        []byte
+	production    bool
+	rates         limiter
+	mailer        func(context.Context, State, Lead, bool) error
+	accountMailer func(context.Context, string, string, string, string) error
 }
 
 func New(files fs.FS) (*App, error) {
@@ -113,6 +114,7 @@ func New(files fs.FS) (*App, error) {
 		return nil, e
 	}
 	a.mailer = a.sendNotification
+	a.accountMailer = sendEmail
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	_, _, e = a.loadState(ctx)
@@ -205,8 +207,8 @@ func (a *App) Handler() http.Handler {
 		}
 		http.Redirect(w, r, s.Settings.Favicon, http.StatusTemporaryRedirect)
 	})
-	mux.HandleFunc("/api/password-link", a.account)
-	mux.HandleFunc("/api/set-password", a.account)
+	mux.HandleFunc("/api/password-link", a.userAccount)
+	mux.HandleFunc("/api/set-password", a.userAccount)
 	mux.HandleFunc("/api/login", a.login)
 	mux.HandleFunc("/api/lead", a.submitLead)
 	mux.HandleFunc("/api/form-token", a.formToken)
@@ -290,12 +292,15 @@ func (a *App) login(w http.ResponseWriter, r *http.Request) {
 		fail(w, 400, "Invalid request")
 		return
 	}
+	if strings.TrimSpace(v.Email) != "" && a.loginKnownUser(w, r, v.Email, v.Password) {
+		return
+	}
 	s, _, e := a.loadState(r.Context())
 	if e != nil {
 		fail(w, 503, "Storage unavailable")
 		return
 	}
-	if (ownerEmail() != "" && (!strings.EqualFold(strings.TrimSpace(v.Email), ownerEmail()) || !s.Auth.Changed)) || !checkPassword(v.Password, s.Auth.Hash) {
+	if (ownerEmail() != "" && a.hasActiveOwner(r.Context())) || (ownerEmail() != "" && (!strings.EqualFold(strings.TrimSpace(v.Email), ownerEmail()) || !s.Auth.Changed)) || !checkPassword(v.Password, s.Auth.Hash) {
 		fail(w, 401, "Incorrect credentials")
 		return
 	}
@@ -337,7 +342,8 @@ func (a *App) adminAPI(w http.ResponseWriter, r *http.Request) {
 		if !requireMethod(w, r, "GET") {
 			return
 		}
-		jsonOut(w, 200, map[string]interface{}{"csrf": sess.CSRF, "weakPassword": !state.Auth.Changed, "storage": fmt.Sprintf("%T", a.store)})
+		email, role := a.userSessionInfo(r.Context(), sess)
+		jsonOut(w, 200, map[string]interface{}{"csrf": sess.CSRF, "weakPassword": sess.UserID == "" && !state.Auth.Changed, "storage": fmt.Sprintf("%T", a.store), "email": email, "role": role})
 	case "logout":
 		if !requireMethod(w, r, "POST") {
 			return
@@ -385,7 +391,13 @@ func (a *App) adminAPI(w http.ResponseWriter, r *http.Request) {
 		}
 		incoming.Auth = Auth{}
 		jsonOut(w, 200, incoming)
+	case "users":
+		a.usersAPI(w, r, sess)
 	case "password":
+		if sess.UserID != "" {
+			a.changeUserPassword(w, r, sess)
+			return
+		}
 		if !requireMethod(w, r, "POST") {
 			return
 		}
