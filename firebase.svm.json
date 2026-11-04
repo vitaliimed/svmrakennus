@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "site": "project-c6c1d639-9739-4837-9c8",
+    "public": "hosting-empty",
+    "ignore": ["**/.*"],
+    "rewrites": [
+      {"source": "**", "run": {"serviceId": "svm-rakennus", "region": "europe-north1", "pinTag": false}}
+    ]
+  }
+}

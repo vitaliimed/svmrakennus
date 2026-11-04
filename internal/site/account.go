@@ -15,9 +15,21 @@ import (
 // Only the server-configured owner can activate or recover administrative access.
 func ownerEmail() string { return strings.TrimSpace(os.Getenv("ADMIN_EMAIL")) }
 
+// The recovery destination is chosen by the operator, never by the form.
+func recoveryMailbox(owner string) string {
+	if address := strings.TrimSpace(os.Getenv("ADMIN_RECOVERY_EMAIL")); address != "" {
+		return address
+	}
+	return owner
+}
+func recoverableEmail(input, owner, mailbox string) bool {
+	input = strings.TrimSpace(input)
+	return validEmail(mailbox) && (strings.EqualFold(input, owner) || strings.EqualFold(input, mailbox))
+}
+
 func (a *App) passwordLink(owner string, version int, expires int64) string {
 	payload := fmt.Sprintf("%d.%d.%s", version, expires, randomID())
-	return payload + "." + a.sign([]byte("owner-password:"+strings.ToLower(owner)+":"+payload))
+	return payload + "." + a.sign([]byte("owner-password:"+strings.ToLower(owner)+"|"+strings.ToLower(recoveryMailbox(owner))+":"+payload))
 }
 
 func (a *App) validPasswordLink(token, owner string, version int) bool {
@@ -29,7 +41,7 @@ func (a *App) validPasswordLink(token, owner string, version int) bool {
 	if err != nil || expiry <= time.Now().Unix() {
 		return false
 	}
-	want := a.sign([]byte("owner-password:" + strings.ToLower(owner) + ":" + strings.Join(parts[:3], ".")))
+	want := a.sign([]byte("owner-password:" + strings.ToLower(owner) + "|" + strings.ToLower(recoveryMailbox(owner)) + ":" + strings.Join(parts[:3], ".")))
 	return hmac.Equal([]byte(want), []byte(parts[3]))
 }
 
@@ -61,14 +73,15 @@ func (a *App) account(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if r.URL.Path == "/api/password-link" {
-		if strings.EqualFold(strings.TrimSpace(input.Email), owner) && a.rates.allow("owner-link", 3, 15*time.Minute) {
+		mailbox := recoveryMailbox(owner)
+		if recoverableEmail(input.Email, owner, mailbox) && a.rates.allow("owner-link", 3, 15*time.Minute) {
 			base, err := url.Parse(strings.TrimSpace(os.Getenv("ADMIN_BASE_URL")))
 			if err != nil || base.Scheme != "https" || base.Host == "" || base.User != nil || base.Path != "" || base.Fragment != "" || base.RawQuery != "" {
 				fail(w, 503, "Set ADMIN_BASE_URL to the HTTPS site origin")
 				return
 			}
 			link := base.String() + "/admin#reset=" + a.passwordLink(owner, state.Auth.Version, time.Now().Add(30*time.Minute).Unix())
-			if err := sendEmail(r.Context(), owner, "Set your SVM Rakennus password", "Use this link within 30 minutes to set your administrator password:\n\n"+link+"\n\nIf you did not request it, you can ignore this email.", ""); err != nil {
+			if err := sendEmail(r.Context(), mailbox, "Set your SVM Rakennus password", "Use this link within 30 minutes to set your administrator password:\n\n"+link+"\n\nIf you did not request it, you can ignore this email.", ""); err != nil {
 				fail(w, 502, "Email delivery failed. Check SMTP settings.")
 				return
 			}

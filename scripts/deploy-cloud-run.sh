@@ -24,7 +24,12 @@ else
 fi
 owner_env=""
 if $owner_release; then
-  owner_env=",ADMIN_EMAIL=service@svmrakennus.fi,ADMIN_BASE_URL=$origin_url"
+  public_url="https://svmrakennus.fi"
+  owner_env=",ADMIN_EMAIL=service@svmrakennus.fi,ADMIN_BASE_URL=$public_url,PUBLIC_SITE_URL=$public_url"
+  if [[ -n "${ADMIN_RECOVERY_EMAIL:-}" ]]; then
+    [[ "$ADMIN_RECOVERY_EMAIL" =~ ^[[:alnum:]_.%+-]+@[[:alnum:].-]+\.[[:alpha:]]{2,}$ ]] || { echo "Invalid recovery address" >&2; exit 1; }
+    owner_env+=",ADMIN_RECOVERY_EMAIL=$ADMIN_RECOVERY_EMAIL"
+  fi
 fi
 gcloud run deploy "$SITE_SERVICE" \
   --source . "${release_flags[@]}" \
@@ -54,8 +59,22 @@ assert all(marker in s for marker in ("<html lang=\"en\">","id=\"request-link\""
 rows=json.load(sys.stdin)["status"]["traffic"]
 assert sum(r.get("percent",0) for r in rows if r.get("revisionName")==sys.argv[1])==100, "Traffic switch not confirmed"' "$revision"
   check_admin "$origin_url"
+  domain_revision() {
+    curl -fsS --max-time 20 -D - -o /dev/null "$public_url/admin?release=$suffix" |
+      awk 'tolower($1) == "x-svm-revision:" {gsub(/\r/, "", $2); print $2}'
+  }
+  if [[ "$(domain_revision)" != "$revision" ]]; then
+    firebase deploy --project "$PROJECT_ID" --config firebase.svm.json --only hosting
+  fi
+  for attempt in {1..12}; do
+    [[ "$(domain_revision)" == "$revision" ]] && break
+    sleep 5
+  done
+  [[ "$(domain_revision)" == "$revision" ]] || { echo "Cloud Run promoted; check Firebase custom domain and DNS for $public_url" >&2; exit 1; }
+  bash scripts/smoke-check.sh "$public_url"
+  check_admin "$public_url"
   printf 'Verified %s serves 100%% of traffic. Owner: service@svmrakennus.fi\n' "$revision"
 fi
 SITE_URL="$(gcloud run services describe "$SITE_SERVICE" --project "$PROJECT_ID" --region "$SITE_REGION" --format='value(status.url)')"
-printf 'Website: %s/\nAdmin: %s/admin\n' "$SITE_URL" "$SITE_URL"
+printf 'Website: %s/\nAdmin: %s/admin\n' "${public_url:-$SITE_URL}" "${public_url:-$SITE_URL}"
 echo 'Set your canonical domain in the admin, replace example data and change the initial password.'

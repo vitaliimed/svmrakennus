@@ -133,7 +133,7 @@
       const result=await response.json();
       if(!response.ok)throw new Error(result.error);
       form.reset();
-      status.textContent=redeem?'Password saved. Sign in with your email and new password.':'If this is the owner address, check your inbox for a password link.';
+      status.textContent=redeem?'Password saved. Sign in with your email and new password.':'If this address matches your account, check the configured recovery inbox for your link.';
       if(redeem){resetToken='';form.hidden=true;$('#login-form').hidden=false;$('#request-link').hidden=false;}
     }catch(error){status.textContent=error.message;}finally{button.disabled=false;}
   });

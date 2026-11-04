@@ -13,6 +13,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -134,7 +135,10 @@ func sameOrigin(r *http.Request) bool {
 		return false
 	}
 	u, e := url.Parse(v)
-	return e == nil && (u.Scheme == "https" || u.Scheme == "http") && strings.EqualFold(u.Host, r.Host)
+	if e != nil || u.User != nil || (u.Scheme != "https" && u.Scheme != "http") {
+		return false
+	}
+	return strings.EqualFold(u.Host, r.Host) || (u.Scheme == "https" && strings.EqualFold("https://"+u.Host, os.Getenv("PUBLIC_SITE_URL")))
 }
 func csrfOK(r *http.Request, s session) bool {
 	return sameOrigin(r) && hmac.Equal([]byte(r.Header.Get("X-CSRF-Token")), []byte(s.CSRF))

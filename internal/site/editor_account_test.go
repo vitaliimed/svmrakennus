@@ -66,3 +66,26 @@ func TestOwnerPasswordLink(t *testing.T) {
 		t.Fatal(w.Body.String())
 	}
 }
+
+func TestRecoveryMailboxSeparateFromSignIn(t *testing.T) {
+	a := testApp(t)
+	owner := "office@example.org"
+	t.Setenv("ADMIN_RECOVERY_EMAIL", "support@example.org")
+	mailbox := recoveryMailbox(owner)
+	if mailbox != "support@example.org" || !recoverableEmail(owner, owner, mailbox) || !recoverableEmail("SUPPORT@example.org", owner, mailbox) || recoverableEmail("stranger@example.org", owner, mailbox) {
+		t.Fatal("unexpected recovery identity")
+	}
+	token := a.passwordLink(owner, 1, time.Now().Add(time.Minute).Unix())
+	if !a.validPasswordLink(token, owner, 1) {
+		t.Fatal("link rejected")
+	}
+	t.Setenv("ADMIN_RECOVERY_EMAIL", "new@example.org")
+	if a.validPasswordLink(token, owner, 1) {
+		t.Fatal("link survived change of recovery inbox")
+	}
+	t.Setenv("PUBLIC_SITE_URL", "https://svmrakennus.fi")
+	html := request(a, "GET", "/en", nil, nil, "").Body.String()
+	if !strings.Contains(html, `rel="canonical" href="https://svmrakennus.fi/en"`) {
+		t.Fatal("wrong public domain")
+	}
+}

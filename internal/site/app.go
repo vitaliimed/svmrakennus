@@ -155,6 +155,9 @@ func (a *App) loadState(ctx context.Context) (State, string, error) {
 	}
 	var s State
 	e = json.Unmarshal(r.Data, &s)
+	if base := os.Getenv("PUBLIC_SITE_URL"); base != "" {
+		s.Settings.BaseURL = base
+	}
 	return s, r.Version, e
 }
 func (a *App) Handler() http.Handler {
@@ -214,6 +217,9 @@ func (a *App) Handler() http.Handler {
 	mux.HandleFunc("/", a.publicPage)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
+		if revision := os.Getenv("K_REVISION"); revision != "" {
+			w.Header().Set("X-SVM-Revision", revision)
+		}
 		w.Header().Set("X-Frame-Options", "DENY")
 		w.Header().Set("Referrer-Policy", "strict-origin-when-cross-origin")
 		w.Header().Set("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
@@ -355,6 +361,9 @@ func (a *App) adminAPI(w http.ResponseWriter, r *http.Request) {
 		if incoming.Revision != state.Revision {
 			fail(w, 409, ErrConflict.Error())
 			return
+		}
+		if base := os.Getenv("PUBLIC_SITE_URL"); base != "" {
+			incoming.Settings.BaseURL = base
 		}
 		incoming.Auth = state.Auth
 		autoRedirects(state, &incoming)

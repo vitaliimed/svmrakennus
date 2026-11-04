@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 source .deployment.env
-site_url="$(gcloud run services describe "$SITE_SERVICE" --region "$SITE_REGION" --project "$PROJECT_ID" --format='value(status.url)')"
+site_url=https://svmrakennus.fi
 read -r -p 'Administrator email (must have access to this inbox): ' owner_email
 read -r -p "Public HTTPS origin [$site_url]: " owner_origin
 owner_origin="${owner_origin:-$site_url}"
