@@ -24,6 +24,7 @@ type App struct {
 	production bool
 	rates      limiter
 	mailer     func(context.Context, State, Lead, bool) error
+	resetMailer func(context.Context, string, string) error
 }
 
 func New(files fs.FS) (*App, error) {
@@ -111,6 +112,7 @@ func New(files fs.FS) (*App, error) {
 		return nil, e
 	}
 	a.mailer = a.sendNotification
+	a.resetMailer = a.sendPasswordReset
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	_, _, e = a.loadState(ctx)
@@ -173,6 +175,8 @@ func (a *App) Handler() http.Handler {
 		http.Redirect(w, r, "/static/images/favicon.svg", http.StatusTemporaryRedirect)
 	})
 	mux.HandleFunc("/api/login", a.login)
+	mux.HandleFunc("/api/password-reset/request", a.requestPasswordReset)
+	mux.HandleFunc("/api/password-reset/confirm", a.confirmPasswordReset)
 	mux.HandleFunc("/api/lead", a.submitLead)
 	mux.HandleFunc("/api/form-token", a.formToken)
 	mux.HandleFunc("/api/admin/", a.adminAPI)
