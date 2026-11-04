@@ -241,8 +241,8 @@ func (a *App) userAccount(w http.ResponseWriter, r *http.Request) {
 		fail(w, http.StatusBadRequest, "Invalid or expired link. Request another email.")
 		return
 	}
-	if len(input.Password) < 12 || len(input.Password) > 256 {
-		fail(w, http.StatusBadRequest, "Use a password of 12–256 characters")
+	if len(input.Password) == 0 || len(input.Password) > 256 {
+		fail(w, http.StatusBadRequest, "Enter a password (1–256 bytes)")
 		return
 	}
 	parts := strings.SplitN(input.Token, ".", 2)
@@ -286,8 +286,8 @@ func (a *App) changeUserPassword(w http.ResponseWriter, r *http.Request, sess se
 		Current string `json:"current"`
 		New     string `json:"new"`
 	}
-	if decodeJSON(w, r, &input, 4096) != nil || len(input.New) < 12 || len(input.New) > 256 {
-		fail(w, http.StatusBadRequest, "New password must be 12–256 characters")
+	if decodeJSON(w, r, &input, 4096) != nil || len(input.New) == 0 || len(input.New) > 256 {
+		fail(w, http.StatusBadRequest, "Enter a new password (1–256 bytes)")
 		return
 	}
 	u, version, err := a.loadUser(r.Context(), sess.UserID)

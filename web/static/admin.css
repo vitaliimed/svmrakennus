@@ -11,3 +11,10 @@
 
 /* Verified multi-user sign-in and invitations */
 #login-notice{color:#d9ead6;font-size:13px;line-height:1.65;margin:14px 0}#login-notice:empty{display:none}.login-help{font-size:12px;line-height:1.6;color:#bacbbf;margin:10px 0 4px}#account-tools summary{cursor:pointer}#account-tools button{min-height:42px}.row-actions button[data-user-action]{white-space:nowrap}
+
+/* Password usability: explicit guidance and accessible visibility controls. */
+.password-show{display:inline-flex;align-items:center;justify-content:center;min-height:34px;background:transparent;border:1px solid #789484;border-radius:4px;color:inherit;padding:6px 12px;margin:2px 0 14px;font-size:12px;cursor:pointer}
+.password-show:focus-visible{outline:3px solid #b9d7c7;outline-offset:3px}
+.password-strength{font-size:12px;line-height:1.6;margin:3px 0 12px;color:inherit;opacity:.85}
+#redeem-link .login-help{color:#d4e2d6;margin-top:-6px;margin-bottom:5px}
+#password-form .password-strength{display:block;margin-top:7px}
