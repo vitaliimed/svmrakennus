@@ -135,6 +135,9 @@ func TestAdminAuthenticationCSRFAndPassword(t *testing.T) {
 		t.Fatal("cross-origin login accepted")
 	}
 	cookie, csrf := signIn(t, a)
+	if cookie.Name != "__session" {
+		t.Fatal("Firebase Hosting requires the __session cookie name")
+	}
 	if !cookie.HttpOnly || cookie.SameSite != http.SameSiteStrictMode {
 		t.Fatal("session cookie policy")
 	}
