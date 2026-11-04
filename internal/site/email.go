@@ -16,21 +16,6 @@ import (
 )
 
 func (a *App) sendNotification(ctx context.Context, s State, l Lead, confirmation bool) error {
-	host := os.Getenv("SMTP_HOST")
-	user := os.Getenv("SMTP_USER")
-	password := os.Getenv("SMTP_PASSWORD")
-	from := os.Getenv("SMTP_FROM")
-	port := os.Getenv("SMTP_PORT")
-	if port == "" {
-		port = "587"
-	}
-	if host == "" || from == "" {
-		return fmt.Errorf("SMTP is not configured; lead remains available in the admin panel")
-	}
-	fa, e := mail.ParseAddress(from)
-	if e != nil || strings.ContainsAny(from, "\r\n") {
-		return fmt.Errorf("invalid SMTP_FROM")
-	}
 	to := s.Settings.NotificationEmail
 	if to == "" {
 		to = os.Getenv("MAIL_TO")
@@ -52,10 +37,33 @@ func (a *App) sendNotification(ctx context.Context, s State, l Lead, confirmatio
 		subject = s.Text[l.Language]["confirmation.subject"]
 		body = s.Text[l.Language]["confirmation.body"] + "\n\n" + s.Settings.Company + "\n" + s.Settings.Phone + "\n" + s.Settings.Email
 	}
+	replyTo := ""
+	if !confirmation {
+		replyTo = l.Email
+	}
+	return sendEmail(ctx, to, subject, body, replyTo)
+}
+
+func sendEmail(ctx context.Context, to, subject, body, reply string) error {
+	host := os.Getenv("SMTP_HOST")
+	user := os.Getenv("SMTP_USER")
+	password := os.Getenv("SMTP_PASSWORD")
+	from := os.Getenv("SMTP_FROM")
+	port := os.Getenv("SMTP_PORT")
+	if port == "" {
+		port = "587"
+	}
+	if host == "" || from == "" {
+		return fmt.Errorf("SMTP is not configured; lead remains available in the admin panel")
+	}
+	fa, e := mail.ParseAddress(from)
+	if e != nil || strings.ContainsAny(from, "\r\n") {
+		return fmt.Errorf("invalid SMTP_FROM")
+	}
 	subject = "=?UTF-8?B?" + base64.StdEncoding.EncodeToString([]byte(cleanLine(subject))) + "?="
 	headers := "From: " + cleanLine(from) + "\r\nTo: " + to + "\r\nSubject: " + subject + "\r\nDate: " + time.Now().Format(time.RFC1123Z) + "\r\nMessage-ID: <" + randomID() + "@" + cleanLine(host) + ">\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n"
-	if !confirmation && validEmail(l.Email) {
-		headers += "Reply-To: " + l.Email + "\r\n"
+	if validEmail(reply) {
+		headers += "Reply-To: " + reply + "\r\n"
 	}
 	encoded := base64.StdEncoding.EncodeToString([]byte(body))
 	var wrapped strings.Builder

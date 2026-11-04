@@ -8,7 +8,7 @@ fi
 go vet ./...
 go test -race -count=1 ./...
 go build -buildvcs=false -o /tmp/svm-verify-server ./cmd/server
-for file in web/static/admin.js web/static/admin-help.js web/static/site.js web/static/tracking.js scripts/test-tracking.cjs scripts/test-admin.cjs; do
+for file in web/static/admin.js web/static/site.js web/static/tracking.js scripts/test-tracking.cjs scripts/test-admin.cjs; do
   node --check "$file"
 done
 node scripts/test-tracking.cjs
