@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestSVMFinnishDefaultAndUkrainianEditor(t *testing.T) {
+func TestSVMFinnishDefaultAndEnglishEditor(t *testing.T) {
 	a := testApp(t)
 	w := request(a, "GET", "/?utm_source=partner", nil, nil, "")
 	if w.Code != 302 || w.Header().Get("Location") != "/fi/?utm_source=partner" {
@@ -29,8 +29,8 @@ func TestSVMFinnishDefaultAndUkrainianEditor(t *testing.T) {
 		}
 	}
 	html := request(a, "GET", "/admin", nil, nil, "").Body.String()
-	if !strings.Contains(html, `<html lang="uk">`) || !strings.Contains(html, "Увійти до кабінету") || !strings.Contains(html, "admin-help.js") {
-		t.Fatal("Ukrainian admin missing")
+	if !strings.Contains(html, `<html lang="en">`) || !strings.Contains(html, "Sign in") || strings.Contains(html, "admin-help.js") {
+		t.Fatal("English admin missing")
 	}
 	s.Settings.BaseURL = "https://svm.example.fi"
 	putState(t, a, s)

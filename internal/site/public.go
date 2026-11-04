@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 )
@@ -143,6 +144,11 @@ func (a *App) publicPage(w http.ResponseWriter, r *http.Request) {
 	}
 	if e = a.templates.ExecuteTemplate(w, "page.html", d); e != nil {
 		log.Printf("public render failed: %v", e)
+		return
+	}
+	if a.production {
+		// Count served pages by category without sending browser data to a vendor.
+		_ = json.NewEncoder(os.Stdout).Encode(map[string]string{"event": "svm_page_served", "language": lang, "page_type": kind})
 	}
 }
 func (a *App) robots(w http.ResponseWriter, r *http.Request) {

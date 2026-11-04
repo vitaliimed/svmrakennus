@@ -88,6 +88,7 @@ func New(files fs.FS) (*App, error) {
 		}
 		return out
 	}, "paragraphs": func(v string) []string { return strings.Split(v, "\n\n") }, "isimage": func(v string) bool { return strings.HasPrefix(v, "/static/images/") }, "year": func() int { return time.Now().Year() }}
+	funcs["editorHTML"] = editorHTML
 	funcs["seqProcess"] = func() []int { return []int{1, 2, 3, 4} }
 	funcs["blockOn"] = func(s State, id string) bool {
 		for _, b := range s.Blocks {
@@ -158,7 +159,26 @@ func (a *App) loadState(ctx context.Context) (State, string, error) {
 func (a *App) Handler() http.Handler {
 	mux := http.NewServeMux()
 	static, _ := fs.Sub(a.files, "static")
-	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.FS(static))))
+	files := http.StripPrefix("/static/", http.FileServer(http.FS(static)))
+	mux.HandleFunc("/static/", func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasSuffix(r.URL.Path, "/") {
+			http.NotFound(w, r)
+			return
+		}
+		if builtInAsset(r.URL.Path) {
+			s, _, err := a.loadState(r.Context())
+			if err != nil {
+				fail(w, 503, "Storage unavailable")
+				return
+			}
+			w.Header().Set("Cache-Control", "no-cache")
+			if s.deletedAsset(r.URL.Path) {
+				http.NotFound(w, r)
+				return
+			}
+		}
+		files.ServeHTTP(w, r)
+	})
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "GET" {
 			fail(w, 405, "Method not allowed")
@@ -170,8 +190,19 @@ func (a *App) Handler() http.Handler {
 	mux.HandleFunc("/robots.txt", a.robots)
 	mux.HandleFunc("/sitemap.xml", a.sitemap)
 	mux.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, "/static/images/favicon.svg", http.StatusTemporaryRedirect)
+		s, _, err := a.loadState(r.Context())
+		if err != nil {
+			fail(w, 503, "Storage unavailable")
+			return
+		}
+		if s.Settings.Favicon == "" {
+			http.NotFound(w, r)
+			return
+		}
+		http.Redirect(w, r, s.Settings.Favicon, http.StatusTemporaryRedirect)
 	})
+	mux.HandleFunc("/api/password-link", a.account)
+	mux.HandleFunc("/api/set-password", a.account)
 	mux.HandleFunc("/api/login", a.login)
 	mux.HandleFunc("/api/lead", a.submitLead)
 	mux.HandleFunc("/api/form-token", a.formToken)
@@ -245,6 +276,7 @@ func (a *App) login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var v struct {
+		Email    string `json:"email"`
 		Password string `json:"password"`
 	}
 	if e := decodeJSON(w, r, &v, 4096); e != nil || len(v.Password) > 256 {
@@ -256,8 +288,8 @@ func (a *App) login(w http.ResponseWriter, r *http.Request) {
 		fail(w, 503, "Storage unavailable")
 		return
 	}
-	if !checkPassword(v.Password, s.Auth.Hash) {
-		fail(w, 401, "Incorrect password")
+	if (ownerEmail() != "" && (!strings.EqualFold(strings.TrimSpace(v.Email), ownerEmail()) || !s.Auth.Changed)) || !checkPassword(v.Password, s.Auth.Hash) {
+		fail(w, 401, "Incorrect credentials")
 		return
 	}
 	sess := session{Exp: time.Now().Add(8 * time.Hour).Unix(), Version: s.Auth.Version, CSRF: randomID()}
@@ -273,7 +305,7 @@ func (a *App) adminPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if e := a.templates.ExecuteTemplate(w, "admin.html", nil); e != nil {
+	if e := a.templates.ExecuteTemplate(w, "admin.html", map[string]bool{"EmailLogin": ownerEmail() != ""}); e != nil {
 		log.Print("admin render failed")
 	}
 }
@@ -374,7 +406,21 @@ func (a *App) adminAPI(w http.ResponseWriter, r *http.Request) {
 		}
 		a.cookie(w, r, "", -1)
 		jsonOut(w, 200, map[string]bool{"ok": true})
+	case "html-preview":
+		if !requireMethod(w, r, "POST") {
+			return
+		}
+		var input struct{ HTML string }
+		if decodeJSON(w, r, &input, 150000) != nil {
+			fail(w, 400, "Invalid HTML preview")
+			return
+		}
+		jsonOut(w, 200, map[string]string{"html": editorPolicy.Sanitize(input.HTML)})
 	case "media":
+		if r.Method == "DELETE" && r.URL.Query().Get("asset") != "" {
+			a.removeBuiltIn(w, r, r.URL.Query().Get("asset"))
+			return
+		}
 		a.mediaAPI(w, r)
 	case "leads":
 		a.leadsAPI(w, r, state)

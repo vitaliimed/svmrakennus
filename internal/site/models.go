@@ -108,21 +108,23 @@ type Auth struct {
 	Changed bool   `json:"changed"`
 }
 type State struct {
-	Schema    int                          `json:"schema"`
-	Revision  int                          `json:"revision"`
-	Updated   string                       `json:"updated"`
-	Settings  Settings                     `json:"settings"`
-	Text      map[string]map[string]string `json:"text"`
-	Blocks    []Block                      `json:"blocks"`
-	Services  []Item                       `json:"services"`
-	Projects  []Item                       `json:"projects"`
-	FAQs      []FAQ                        `json:"faqs"`
-	Reviews   []Review                     `json:"reviews"`
-	Documents []Document                   `json:"documents"`
-	SEO       map[string]SEO               `json:"seo"`
-	Tracking  Tracking                     `json:"tracking"`
-	Redirects []Redirect                   `json:"redirects"`
-	Auth      Auth                         `json:"auth"`
+	PageHTML      map[string]string            `json:"pageHTML,omitempty"`
+	DeletedAssets []string                     `json:"deletedAssets,omitempty"`
+	Schema        int                          `json:"schema"`
+	Revision      int                          `json:"revision"`
+	Updated       string                       `json:"updated"`
+	Settings      Settings                     `json:"settings"`
+	Text          map[string]map[string]string `json:"text"`
+	Blocks        []Block                      `json:"blocks"`
+	Services      []Item                       `json:"services"`
+	Projects      []Item                       `json:"projects"`
+	FAQs          []FAQ                        `json:"faqs"`
+	Reviews       []Review                     `json:"reviews"`
+	Documents     []Document                   `json:"documents"`
+	SEO           map[string]SEO               `json:"seo"`
+	Tracking      Tracking                     `json:"tracking"`
+	Redirects     []Redirect                   `json:"redirects"`
+	Auth          Auth                         `json:"auth"`
 }
 
 type Redirect struct {

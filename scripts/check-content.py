@@ -30,7 +30,7 @@ for css in ('site','admin'):
 print(f'PASS: {len(data["text"]["en"])} text fields in each language, default images, SEO markup and launch safeguards')
 
 assert data['settings']['company']=='SVM Rakennus'
-assert '<html lang="uk">' in (root/'web/templates/admin.html').read_text()
+assert '<html lang="en">' in (root/'web/templates/admin.html').read_text()
 assert not re.search('[ыэёЫЭЁъЪ]',(root/'web/static/admin.js').read_text())
 assert not re.search('NORDRA|Nordra|nordra',data['seo']['fi']['title'])
-print('PASS: SVM branding, Finnish primary language, Ukrainian editor translations')
+print('PASS: SVM branding, Finnish primary language, English editor')

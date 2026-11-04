@@ -194,6 +194,9 @@ func safeFileRef(v string) bool {
 }
 func cleanLine(v string) string { return strings.ReplaceAll(strings.ReplaceAll(v, "\r", ""), "\n", "") }
 func validateState(s State) error {
+	if err := validateEditor(s); err != nil {
+		return err
+	}
 	if err := validateRedirects(s.Redirects); err != nil {
 		return err
 	}
