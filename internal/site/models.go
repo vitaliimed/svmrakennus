@@ -103,9 +103,12 @@ type Tracking struct {
 	Events   map[string]EventRule `json:"events"`
 }
 type Auth struct {
-	Hash    string `json:"hash"`
-	Version int    `json:"version"`
-	Changed bool   `json:"changed"`
+	Hash             string `json:"hash"`
+	Version          int    `json:"version"`
+	Changed          bool   `json:"changed"`
+	ResetHash        string `json:"resetHash,omitempty"`
+	ResetExpires     int64  `json:"resetExpires,omitempty"`
+	ResetRequestedAt int64  `json:"resetRequestedAt,omitempty"`
 }
 type State struct {
 	Schema    int                          `json:"schema"`
