@@ -24,8 +24,13 @@ func TestSVMFinnishDefaultAndUkrainianEditor(t *testing.T) {
 		if strings.Contains(html, "NORDRA") || strings.Contains(html, "Новий проєкт") || strings.Contains(html, s.Text["uk"]["hero.title"]) {
 			t.Fatal("old brand or internal translation appeared in public HTML")
 		}
-		if !strings.Contains(html, `class="hero-visual"`) || !strings.Contains(html, "/static/images/svm-logo.svg") {
-			t.Fatal("Scandinavian layout or logo missing")
+		for _, token := range []string{`class="hero"`, `class="hero-shade"`, `class="text-link light"`, `--accent:#fbbb21`, `--paper:#f8faff`, `--ink:#090b19`, s.Text[lang]["hero.title"]} {
+			if !strings.Contains(html, token) {
+				t.Fatalf("Contrast layout missing: %s", token)
+			}
+		}
+		if strings.Contains(html, `class="hero-visual"`) || strings.Contains(html, "preview-data") {
+			t.Fatal("unselected layout or concept handlers appeared in production HTML")
 		}
 	}
 	html := request(a, "GET", "/admin", nil, nil, "").Body.String()

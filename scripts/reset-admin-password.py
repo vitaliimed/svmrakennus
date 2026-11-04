@@ -7,16 +7,20 @@ def main():
     parser.add_argument('--project',required=True)
     parser.add_argument('--database',required=True)
     parser.add_argument('--namespace',required=True)
+    parser.add_argument('--setup-password',action='store_true',help='Explicitly set the initial setup password 12345 without prompting.')
     args=parser.parse_args()
     if not re.fullmatch(r'[a-z][a-z0-9-]{4,28}[a-z0-9]',args.project):
         raise ValueError('Invalid project ID')
     for value in (args.database,args.namespace):
         if not re.fullmatch(r'[A-Za-z0-9_()-]{1,80}',value):
             raise ValueError('Invalid database or namespace')
-    password=getpass.getpass('New admin password (at least 12 characters): ')
-    confirm=getpass.getpass('Repeat password: ')
-    if password!=confirm or not 12<=len(password)<=256:
-        raise ValueError('Passwords must match and contain 12-256 characters')
+    if args.setup_password:
+        password='12345'
+    else:
+        password=getpass.getpass('New admin password (at least 12 characters): ')
+        confirm=getpass.getpass('Repeat password: ')
+        if password!=confirm or not 12<=len(password)<=256 or len(password.encode())>256:
+            raise ValueError('Passwords must match, contain at least 12 characters and fit within 256 UTF-8 bytes')
     result=subprocess.run(['gcloud','auth','print-access-token','--project',args.project],check=True,capture_output=True,text=True)
     token=result.stdout.strip()
     if not token:
@@ -31,7 +35,7 @@ def main():
         raise ValueError('Unsupported site schema')
     salt=secrets.token_bytes(24)
     derived=hashlib.pbkdf2_hmac('sha256',password.encode(),salt,600000).hex()
-    state['auth']={'hash':'pbkdf2-sha256$600000$'+salt.hex()+'$'+derived,'version':state['auth']['version']+1,'changed':True}
+    state['auth']={'hash':'pbkdf2-sha256$600000$'+salt.hex()+'$'+derived,'version':state['auth']['version']+1,'changed':not args.setup_password}
     state['revision']+=1
     state['updated']=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds').replace('+00:00','Z')
     payload=json.dumps({'fields':{'payload':{'stringValue':json.dumps(state,ensure_ascii=False,separators=(',',':'))}}},ensure_ascii=False).encode()
