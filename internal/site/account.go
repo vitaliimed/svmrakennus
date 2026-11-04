@@ -93,8 +93,8 @@ func (a *App) account(w http.ResponseWriter, r *http.Request) {
 		fail(w, 400, "Invalid or expired link. Request another email.")
 		return
 	}
-	if len(input.Password) < 12 || len(input.Password) > 256 {
-		fail(w, 400, "Use a password of 12–256 bytes")
+	if len(input.Password) == 0 || len(input.Password) > 256 {
+		fail(w, 400, "Enter a password (1–256 bytes)")
 		return
 	}
 	state.Auth = Auth{Hash: passwordHash(input.Password), Version: state.Auth.Version + 1, Changed: true}
