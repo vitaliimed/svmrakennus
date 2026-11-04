@@ -17,13 +17,13 @@ import (
 )
 
 type App struct {
-	store      Store
-	files      fs.FS
-	templates  *template.Template
-	secret     []byte
-	production bool
-	rates      limiter
-	mailer     func(context.Context, State, Lead, bool) error
+	store         Store
+	files         fs.FS
+	templates     *template.Template
+	secret        []byte
+	production    bool
+	rates         limiter
+	mailer        func(context.Context, State, Lead, bool) error
 	accountMailer func(context.Context, string, string, string, string) error
 }
 
