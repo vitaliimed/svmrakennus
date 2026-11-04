@@ -168,5 +168,9 @@ func (a *App) sendPasswordReset(ctx context.Context, to, link string) error {
 		"Open this link to set a new password (valid for 15 minutes, single use):\n" +
 		link + "\n\nIf you did not request a password reset, you can ignore this email.\n" +
 		"Never share this link with anyone.\n"
-	return sendSMTP(ctx, to, subject, body, "")
+	// Reuse the already audited SMTP implementation for lead confirmation emails.
+	s := State{Settings: Settings{Company: "SVM Rakennus", Email: "service@svmrakennus.fi"}, Text: map[string]map[string]string{
+		"en": {"confirmation.subject": subject, "confirmation.body": body},
+	}}
+	return a.sendNotification(ctx, s, Lead{Email: to, Language: "en"}, true)
 }
