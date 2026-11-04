@@ -413,8 +413,8 @@ func (a *App) adminAPI(w http.ResponseWriter, r *http.Request) {
 			fail(w, 403, "Current password is incorrect")
 			return
 		}
-		if len(v.New) < 12 || len(v.New) > 256 {
-			fail(w, 400, "Use 12–256 characters for the new password")
+		if len(v.New) == 0 || len(v.New) > 256 {
+			fail(w, 400, "Enter a new password (1–256 bytes)")
 			return
 		}
 		state.Auth = Auth{Hash: passwordHash(v.New), Version: state.Auth.Version + 1, Changed: true}
