@@ -90,6 +90,7 @@ func New(files fs.FS) (*App, error) {
 	}, "paragraphs": func(v string) []string { return strings.Split(v, "\n\n") }, "isimage": func(v string) bool { return strings.HasPrefix(v, "/static/images/") }, "year": func() int { return time.Now().Year() }}
 	funcs["editorHTML"] = editorHTML
 	funcs["seqProcess"] = func() []int { return []int{1, 2, 3, 4} }
+	funcs["langPath"] = localizedPath
 	funcs["blockOn"] = func(s State, id string) bool {
 		for _, b := range s.Blocks {
 			if b.ID == id {
@@ -101,7 +102,7 @@ func New(files fs.FS) (*App, error) {
 	funcs["contactHref"] = func(s State, lang string) string {
 		for _, b := range s.Blocks {
 			if b.ID == "contact" && b.Enabled {
-				return "/" + lang + "/#contact"
+				return localizedPath(lang, "/#contact")
 			}
 		}
 		return "mailto:" + s.Settings.Email

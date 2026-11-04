@@ -331,7 +331,7 @@ func (a *App) leadSuccess(w http.ResponseWriter, r *http.Request, l Lead) {
 		jsonOut(w, 201, map[string]interface{}{"ok": true, "id": l.ID})
 		return
 	}
-	http.Redirect(w, r, "/"+l.Language+"/thank-you/", http.StatusSeeOther)
+	http.Redirect(w, r, localizedPath(l.Language, "/thank-you/"), http.StatusSeeOther)
 }
 func (a *App) attemptEmail(ctx context.Context, s State, id string) error {
 	rec, e := a.store.Get(ctx, "leads/"+id)

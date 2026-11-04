@@ -14,11 +14,11 @@ func TestBuiltinRemovalAndHTML(t *testing.T) {
 	s, _, _ := a.loadState(context.Background())
 	s.PageHTML = map[string]string{"/fi/": "<h1>Own content</h1><script>alert(1)</script><img src='/static/images/hero.webp' onerror='alert(2)'>"}
 	putState(t, a, s)
-	html := request(a, "GET", "/fi/", nil, nil, "").Body.String()
+	html := request(a, "GET", "/", nil, nil, "").Body.String()
 	if !strings.Contains(html, "Own content") || !strings.Contains(html, `id="lead-form"`) || strings.Contains(html, "alert(") {
 		t.Fatal("unsafe or incomplete HTML replacement")
 	}
-	if strings.Contains(request(a, "GET", "/en/", nil, nil, "").Body.String(), "Own content") {
+	if strings.Contains(request(a, "GET", "/en", nil, nil, "").Body.String(), "Own content") {
 		t.Fatal("override leaked between languages")
 	}
 	const target = "/api/admin/media?asset=/static/images/hero.webp"
@@ -33,7 +33,7 @@ func TestBuiltinRemovalAndHTML(t *testing.T) {
 	if w := request(a, "GET", "/static/images/hero.webp", nil, nil, ""); w.Code != 404 {
 		t.Fatal("deleted asset is still public")
 	}
-	if html := request(a, "GET", "/fi/", nil, nil, "").Body.String(); strings.Contains(html, "/static/images/hero.webp") {
+	if html := request(a, "GET", "/", nil, nil, "").Body.String(); strings.Contains(html, "/static/images/hero.webp") {
 		t.Fatal("dangling asset reference")
 	}
 }

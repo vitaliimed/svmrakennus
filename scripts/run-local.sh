@@ -8,5 +8,5 @@ if [[ -f .env ]]; then
 fi
 export PORT="${PORT:-8080}"
 export DATA_DIR="${DATA_DIR:-data}"
-printf 'Website: http://localhost:%s/fi/\nAdmin: http://localhost:%s/admin\n' "$PORT" "$PORT"
+printf 'Website: http://localhost:%s/\nAdmin: http://localhost:%s/admin\n' "$PORT" "$PORT"
 exec go run ./cmd/server

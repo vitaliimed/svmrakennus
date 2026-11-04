@@ -57,5 +57,5 @@ assert sum(r.get("percent",0) for r in rows if r.get("revisionName")==sys.argv[1
   printf 'Verified %s serves 100%% of traffic. Owner: service@svmrakennus.fi\n' "$revision"
 fi
 SITE_URL="$(gcloud run services describe "$SITE_SERVICE" --project "$PROJECT_ID" --region "$SITE_REGION" --format='value(status.url)')"
-printf 'Website: %s/fi/\nAdmin: %s/admin\n' "$SITE_URL" "$SITE_URL"
+printf 'Website: %s/\nAdmin: %s/admin\n' "$SITE_URL" "$SITE_URL"
 echo 'Set your canonical domain in the admin, replace example data and change the initial password.'

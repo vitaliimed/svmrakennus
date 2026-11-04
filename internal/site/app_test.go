@@ -71,7 +71,7 @@ func putState(t *testing.T, a *App, s State) {
 }
 func TestRenderedPagesAndSEO(t *testing.T) {
 	a := testApp(t)
-	for _, path := range []string{"/en/", "/fi/", "/en/services/firestopping/", "/fi/services/renovation/", "/en/projects/home-renovation/", "/fi/privacy/", "/en/cookies/", "/en/terms/", "/en/thank-you/", "/admin"} {
+	for _, path := range []string{"/", "/en", "/en/services/firestopping/", "/services/renovation/", "/en/projects/home-renovation/", "/privacy/", "/en/cookies/", "/en/terms/", "/en/thank-you/", "/admin"} {
 		w := request(a, "GET", path, nil, nil, "")
 		if w.Code != 200 {
 			t.Errorf("%s: %d %s", path, w.Code, w.Body.String())
@@ -89,14 +89,17 @@ func TestRenderedPagesAndSEO(t *testing.T) {
 			}
 		}
 	}
-	if w := request(a, "GET", "/fi/", nil, nil, ""); !strings.Contains(w.Body.String(), `lang="fi"`) || !strings.Contains(w.Body.String(), "Palokatkotyöt") {
+	if w := request(a, "GET", "/", nil, nil, ""); !strings.Contains(w.Body.String(), `lang="fi"`) || !strings.Contains(w.Body.String(), "Palokatkotyöt") {
 		t.Fatal("Finnish translation missing")
 	}
-	if w := request(a, "GET", "/en/", nil, nil, ""); strings.Contains(w.Body.String(), "ZgotmplZ") {
+	if w := request(a, "GET", "/en", nil, nil, ""); strings.Contains(w.Body.String(), "ZgotmplZ") {
 		t.Fatal("unsafe template context marker")
 	}
-	if w := request(a, "GET", "/", nil, nil, ""); w.Code != 302 || w.Header().Get("Location") != "/fi/" {
-		t.Fatal("main-language redirect")
+	if w := request(a, "GET", "/fi/?utm_campaign=old", nil, nil, ""); w.Code != 301 || w.Header().Get("Location") != "/?utm_campaign=old" {
+		t.Fatal("legacy Finnish URL must redirect to the canonical root and preserve query")
+	}
+	if w := request(a, "GET", "/en/", nil, nil, ""); w.Code != 301 || w.Header().Get("Location") != "/en" {
+		t.Fatal("English homepage must omit the trailing slash")
 	}
 	if w := request(a, "GET", "/unknown", nil, nil, ""); w.Code != 404 {
 		t.Fatal("unknown page must 404")
@@ -110,7 +113,7 @@ func TestRenderedPagesAndSEO(t *testing.T) {
 	s.Settings.BaseURL = "https://build.example.fi"
 	s.Text["en"]["hero.title"] = `<script>alert("x")</script>`
 	putState(t, a, s)
-	w := request(a, "GET", "/en/", nil, nil, "")
+	w := request(a, "GET", "/en", nil, nil, "")
 	if strings.Contains(w.Body.String(), `<script>alert("x")</script>`) {
 		t.Fatal("text XSS not escaped")
 	}
@@ -118,7 +121,7 @@ func TestRenderedPagesAndSEO(t *testing.T) {
 		t.Fatal("expected escaped text")
 	}
 	w = request(a, "GET", "/sitemap.xml", nil, nil, "")
-	if !strings.Contains(w.Body.String(), "https://build.example.fi/fi/services/firestopping/") || strings.Contains(w.Body.String(), "home-renovation") {
+	if !strings.Contains(w.Body.String(), "https://build.example.fi/services/firestopping/") || strings.Contains(w.Body.String(), "home-renovation") {
 		t.Fatal("sitemap should contain translated services and exclude illustrative projects")
 	}
 }
@@ -434,11 +437,17 @@ func TestAutomaticRedirectAndCycleRejection(t *testing.T) {
 	if w.Code != 200 {
 		t.Fatal(w.Body.String())
 	}
-	w = request(a, "GET", "/fi/services/"+old+"/", nil, nil, "")
-	if w.Code != 301 || w.Header().Get("Location") != "/fi/services/updated-renovation/" {
+	w = request(a, "GET", "/services/"+old+"/", nil, nil, "")
+	if w.Code != 301 || w.Header().Get("Location") != "/services/updated-renovation/" {
 		t.Fatal("old service URL did not redirect")
 	}
-	if validateRedirects([]Redirect{{"/en/", "/fi/"}, {"/fi/", "/en/"}}) == nil {
+	for _, legacy := range []string{"/fi/services/" + old + "/", "/fi/services/" + old} {
+		w = request(a, "GET", legacy, nil, nil, "")
+		if w.Code != 301 || w.Header().Get("Location") != "/services/updated-renovation/" {
+			t.Fatalf("legacy service URL %s did not redirect directly: %d %s", legacy, w.Code, w.Header().Get("Location"))
+		}
+	}
+	if validateRedirects([]Redirect{{"/en/services/a/", "/services/a/"}, {"/services/a/", "/en/services/a/"}}) == nil {
 		t.Fatal("redirect cycle accepted")
 	}
 }
