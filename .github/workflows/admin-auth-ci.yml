@@ -1,0 +1,29 @@
+name: SVM multi-user authentication regression
+
+on:
+  push:
+    branches:
+      - codex/multi-user-email-auth-20261104
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Format Go sources for verification
+        run: gofmt -w internal/site/app.go internal/site/security.go internal/site/users.go internal/site/users_test.go
+      - name: Check app, tests, race conditions and JS
+        run: bash scripts/verify.sh
