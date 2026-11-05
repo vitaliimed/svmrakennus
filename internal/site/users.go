@@ -211,6 +211,10 @@ func (a *App) userAccount(w http.ResponseWriter, r *http.Request) {
 			fail(w, http.StatusBadRequest, "Enter a valid email address")
 			return
 		}
+		if normalizedEmail(input.Email) == systemSenderEmail {
+			fail(w, http.StatusBadRequest, "Company mailbox is reserved for outgoing email")
+			return
+		}
 		key := userKey(input.Email)
 		if !a.rates.allow("user-link:"+key, 3, 30*time.Minute) {
 			jsonOut(w, http.StatusOK, map[string]bool{"ok": true})
@@ -229,6 +233,10 @@ func (a *App) userAccount(w http.ResponseWriter, r *http.Request) {
 	}
 	// Previously issued single-owner links remain redeemable during migration.
 	if strings.Count(input.Token, ".") == 3 {
+		if a.production {
+			fail(w, http.StatusBadRequest, "Request a new link for an individual account")
+			return
+		}
 		data, _ := json.Marshal(input)
 		r.Body = io.NopCloser(bytes.NewReader(data))
 		a.account(w, r)
