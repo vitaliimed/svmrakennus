@@ -62,6 +62,12 @@ func TestBrandedEmailUpdatesWithWebsiteThemeAndEscapesData(t *testing.T) {
 	if !strings.Contains(admin, "svmrakennus.fi/admin") {
 		t.Fatal("admin login link missing")
 	}
+	// Admin-uploaded images have a public /media/ URL without a filename extension.
+	s.Settings.Logo = "/media/" + strings.Repeat("a", 48)
+	uploaded := brandedEmailHTML(s, lead, true)
+	if !strings.Contains(uploaded, "https://svmrakennus.fi/media/"+strings.Repeat("a", 48)) {
+		t.Fatal("uploaded logo in Media library was not included in branded email")
+	}
 	s.Settings.Accent = "#e17a36"
 	s.Settings.Paper = "#fff4ed"
 	s.Settings.HeadingFont = "sans"
