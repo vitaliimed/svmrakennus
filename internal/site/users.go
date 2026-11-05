@@ -140,20 +140,14 @@ func (a *App) sendUserLink(ctx context.Context, email string, invite bool) error
 		if errors.Is(err, ErrNotFound) {
 			user = adminUser{Email: email, Role: "editor", Status: "pending", Created: now()}
 			version = "create"
-			if false {
-				user.Role = "owner"
-				user.Status = "active"
-			}
+			
 		} else if err != nil {
 			return err
 		}
 		if user.Status == "disabled" && !invite {
 			return nil
 		}
-		if user.Role == "owner" || ownerIdentity(email) {
-			user.Role = "owner"
-			user.Status = "active"
-		} else if invite {
+		if invite {
 			user.Status = "active"
 		}
 		// Throttle repeated reset requests across Cloud Run instances.
