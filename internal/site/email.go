@@ -62,7 +62,7 @@ func sendHTMLEmail(ctx context.Context, to, subject, body, htmlBody, reply strin
 		return fmt.Errorf("invalid SMTP_FROM")
 	}
 	subject = "=?UTF-8?B?" + base64.StdEncoding.EncodeToString([]byte(cleanLine(subject))) + "?="
-	headers := "From: " + cleanLine(from) + "\r\nTo: " + to + "\r\nSubject: " + subject + "\r\nDate: " + time.Now().Format(time.RFC1123Z) + "\r\nMessage-ID: <" + randomID() + "@" + cleanLine(host) + ">\r\nMIME-Version: 1.0\r\n"
+	headers := "From: SVM Rakennus <" + cleanLine(from) + ">\r\nTo: " + to + "\r\nSubject: " + subject + "\r\nDate: " + time.Now().Format(time.RFC1123Z) + "\r\nMessage-ID: <" + randomID() + "@" + cleanLine(host) + ">\r\nMIME-Version: 1.0\r\n"
 	if validEmail(reply) {
 		headers += "Reply-To: " + reply + "\r\n"
 	}
