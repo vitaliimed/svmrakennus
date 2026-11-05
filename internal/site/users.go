@@ -338,7 +338,7 @@ func (a *App) usersAPI(w http.ResponseWriter, r *http.Request, sess session) {
 		for _, record := range records {
 			key := strings.TrimPrefix(record.Key, "users/")
 			var u adminUser
-			if json.Unmarshal(record.Data, &u) != nil || !validEmail(u.Email) {
+			if json.Unmarshal(record.Data, &u) != nil || !validEmail(u.Email) || normalizedEmail(u.Email) == systemSenderEmail {
 				continue
 			}
 			out = append(out, adminUserView{ID: key, Email: u.Email, Role: u.Role,
@@ -352,7 +352,7 @@ func (a *App) usersAPI(w http.ResponseWriter, r *http.Request, sess session) {
 		var input struct {
 			Email string `json:"email"`
 		}
-		if decodeJSON(w, r, &input, 4096) != nil || !validEmail(strings.TrimSpace(input.Email)) {
+		if decodeJSON(w, r, &input, 4096) != nil || !validEmail(strings.TrimSpace(input.Email)) || normalizedEmail(input.Email) == systemSenderEmail {
 			fail(w, http.StatusBadRequest, "Enter a valid email address")
 			return
 		}
