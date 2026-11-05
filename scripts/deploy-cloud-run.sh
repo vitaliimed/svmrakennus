@@ -49,18 +49,23 @@ print(next(r["url"] for r in rows if r.get("tag")==sys.argv[1] and r.get("revisi
 s=sys.stdin.read()
 assert all(marker in s for marker in ("<html lang=\"en\">","id=\"request-link\"","id=\"redeem-link\"")), "English owner recovery missing"'
   }
-  # Cloud Run traffic-tag routes may not become available immediately after deploy.
-  # Never promote a revision until its tagged health endpoint is reachable.
+  # Cloud Run reserves some URL paths ending in z, including /healthz.
+  # Probe /health on new images; keep /admin as an independently checked fallback.
   candidate_healthy=false
   for attempt in {1..12}; do
-    if [[ "$(curl -sS --max-time 20 "$candidate/healthz" 2>/dev/null || true)" == "ok" ]]; then
+    check_body="$(curl -fsS --max-time 25 "$candidate/health" 2>/dev/null || true)"
+    if [[ "$check_body" == "ok" ]]; then
+      candidate_healthy=true
+      break
+    fi
+    if curl -fsS --max-time 25 "$candidate/admin" 2>/dev/null | grep -q 'id="login-form"'; then
       candidate_healthy=true
       break
     fi
     if (( attempt < 12 )); then sleep 5; fi
   done
   if ! $candidate_healthy; then
-    echo "Tagged revision /healthz did not become healthy; keeping existing production traffic." >&2
+    echo "Tagged revision failed /health and /admin reachability; existing production traffic unchanged." >&2
     echo "To resume this already-built revision, use scripts/resume-owner-release.sh $revision" >&2
     exit 1
   fi
