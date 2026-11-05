@@ -61,12 +61,12 @@ func TestIndependentEmailAccountsAndOwnerApproval(t *testing.T) {
 
 	// The first owner is explicitly provisioned by a Google Cloud operator,
 	// never inferred from a mailbox or from public registration.
-	seed := adminUser{Email:"owner@example.org",Role:"owner",Status:"active",Created:now(),Version:1}
+	seed := adminUser{Email: "owner@example.org", Role: "owner", Status: "active", Created: now(), Version: 1}
 	if err := a.saveUser(context.Background(), userKey(seed.Email), seed, "create"); err != nil {
 		t.Fatal(err)
 	}
-	if w := request(a,"POST","/api/password-link",strings.NewReader(`{"email":"service@svmrakennus.fi"}`),nil,""); w.Code != 400 {
-		t.Fatal("corporate sender must not be a login account",w.Code)
+	if w := request(a, "POST", "/api/password-link", strings.NewReader(`{"email":"service@svmrakennus.fi"}`), nil, ""); w.Code != 400 {
+		t.Fatal("corporate sender must not be a login account", w.Code)
 	}
 	ownerToken := requestLink("owner@example.org")
 	if text := setPassword(ownerToken, "owner-password-strong", 200); !strings.Contains(text, `"status":"active"`) {
@@ -113,18 +113,18 @@ func TestIndependentEmailAccountsAndOwnerApproval(t *testing.T) {
 	if w := request(a, "PATCH", "/api/admin/users", strings.NewReader(promote), ownerCookie, ownerCSRF); w.Code != 200 {
 		t.Fatal("owner promotion failed", w.Body.String())
 	}
-	if w := request(a,"GET","/api/admin/state",nil,staffCookie,""); w.Code != 401 {
+	if w := request(a, "GET", "/api/admin/state", nil, staffCookie, ""); w.Code != 401 {
 		t.Fatal("role change should revoke user sessions")
 	}
-	staffCookie, _ = login("staff@example.org","another-staff-password",200)
+	staffCookie, _ = login("staff@example.org", "another-staff-password", 200)
 	if w := request(a, "GET", "/api/admin/users", nil, staffCookie, ""); w.Code != 200 {
 		t.Fatal("promoted administrator should see users")
 	}
 	demote := fmt.Sprintf(`{"id":%q,"action":"demote"}`, userID)
-	if w := request(a,"PATCH","/api/admin/users",strings.NewReader(demote),ownerCookie,ownerCSRF); w.Code != 200 {
-		t.Fatal("owner demotion failed",w.Body.String())
+	if w := request(a, "PATCH", "/api/admin/users", strings.NewReader(demote), ownerCookie, ownerCSRF); w.Code != 200 {
+		t.Fatal("owner demotion failed", w.Body.String())
 	}
-	staffCookie, _ = login("staff@example.org","another-staff-password",200)
+	staffCookie, _ = login("staff@example.org", "another-staff-password", 200)
 	login("owner@example.org", "owner-password-strong", 200)
 	disable := fmt.Sprintf(`{"id":%q,"action":"disable"}`, userID)
 	if w := request(a, "PATCH", "/api/admin/users", strings.NewReader(disable), ownerCookie, ownerCSRF); w.Code != 200 {
