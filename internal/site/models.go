@@ -159,6 +159,9 @@ type Lead struct {
 	EmailStatus      string            `json:"emailStatus"`
 	EmailAttempts    int               `json:"emailAttempts"`
 	EmailLastAttempt string            `json:"emailLastAttempt"`
+	ConfirmationEmailStatus string `json:"confirmationEmailStatus,omitempty"`
+	ConfirmationEmailAttempts int `json:"confirmationEmailAttempts,omitempty"`
+	ConfirmationEmailLastAttempt string `json:"confirmationEmailLastAttempt,omitempty"`
 }
 
 func now() string { return time.Now().UTC().Format(time.RFC3339) }
