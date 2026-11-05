@@ -3,8 +3,7 @@ set -euo pipefail
 SITE_CHECK_URL="${1:?Usage: bash scripts/smoke-check.sh https://YOUR_SERVICE_URL}"
 SITE_CHECK_URL="${SITE_CHECK_URL%/}"
 [[ "$SITE_CHECK_URL" =~ ^https://[a-zA-Z0-9.-]+(:[0-9]+)?$ ]] || { echo 'Expected an HTTPS base URL without a path.' >&2; exit 1; }
-curl --fail --silent --show-error --max-time 30 "$SITE_CHECK_URL/healthz"
-printf '\n'
+curl --fail --silent --show-error --max-time 30 "$SITE_CHECK_URL/admin" | python3 -c 'import sys; h=sys.stdin.read(); assert "<html lang=\\"en\\">" in h and "id=\\"login-form\\"" in h; print("PASS app reachability via /admin (avoid reserved /healthz)")'
 for site_path in / /en /admin /robots.txt /sitemap.xml; do
   site_code="$(curl --silent --show-error --output /dev/null --max-time 30 --write-out '%{http_code}' "$SITE_CHECK_URL$site_path")"
   [[ "$site_code" == '200' ]] || { printf 'FAIL %s: HTTP %s\n' "$site_path" "$site_code" >&2; exit 1; }
