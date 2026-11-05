@@ -188,6 +188,16 @@ func (a *App) Handler() http.Handler {
 		}
 		files.ServeHTTP(w, r)
 	})
+	// Use /health for public Cloud Run and Firebase checks. Cloud Run reserves
+	// some URL paths ending in z, so /healthz can be intercepted upstream.
+	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "GET" {
+			fail(w, 405, "Method not allowed")
+			return
+		}
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+		_, _ = w.Write([]byte("ok"))
+	})
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "GET" {
 			fail(w, 405, "Method not allowed")
