@@ -67,7 +67,7 @@ def main():
             user = json.loads(doc["fields"]["payload"]["stringValue"])
         except (KeyError, ValueError, TypeError):
             raise ValueError("Malformed Firestore user document; no change made")
-        if user.get("role") == "owner" and user.get("email", "").lower() != email:
+        if user.get("role") == "owner" and user.get("email", "").lower() not in (email, SYSTEM_SENDER):
             raise ValueError("Another owner already exists; manage access through the Users tab")
         if doc["name"].rsplit("/", 1)[-1] == key:
             existing = (doc, user)
