@@ -476,6 +476,25 @@ func (a *App) adminAPI(w http.ResponseWriter, r *http.Request) {
 		a.leadsAPI(w, r, state)
 	case "export":
 		a.exportLeads(w, r)
+	case "email-preview":
+		if !requireMethod(w, r, "GET") {
+			return
+		}
+		kind := r.URL.Query().Get("type")
+		if kind != "admin" && kind != "customer" {
+			fail(w, 400, "Expected type=admin or type=customer")
+			return
+		}
+		lang := r.URL.Query().Get("lang")
+		if lang != "fi" && lang != "en" {
+			lang = "fi"
+		}
+		sample := Lead{ID: "SVM-DEMO-2026", Created: now(), Name: "Example Customer", Company: "Example Oy",
+			Email: "customer@example.fi", Phone: "+358 40 123 4567", Service: "renovation",
+			Message: "Kitchen renovation enquiry. Please contact me to arrange a visit.", Language: lang}
+		w.Header().Set("Cache-Control", "private, no-store")
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		_, _ = io.WriteString(w, brandedEmailHTML(state, sample, kind == "customer"))
 	case "email-test":
 		if !requireMethod(w, r, "POST") {
 			return
