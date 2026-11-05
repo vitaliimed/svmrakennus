@@ -356,6 +356,17 @@ func (a *App) usersAPI(w http.ResponseWriter, r *http.Request, sess session) {
 			fail(w, http.StatusBadRequest, "Enter a valid email address")
 			return
 		}
+		if role == "admin" {
+			existing, _, err := a.loadUser(r.Context(), userKey(input.Email))
+			if err != nil && !errors.Is(err, ErrNotFound) {
+				fail(w, http.StatusServiceUnavailable, "Cannot check user role")
+				return
+			}
+			if err == nil && (existing.Role == "owner" || existing.Role == "admin") {
+				fail(w, http.StatusForbidden, "Administrators cannot invite or reset privileged accounts")
+				return
+			}
+		}
 		if err := a.sendUserLink(r.Context(), input.Email, true); err != nil {
 			fail(w, http.StatusBadGateway, "Could not send invitation email")
 			return
