@@ -44,7 +44,7 @@ probe() {
   local url="$1"
   : >"$headers"; : >"$body"
   curl -sS --connect-timeout 8 --max-time 25 --dump-header "$headers" --output "$body" \
-    --write-out '%{http_code}' "$url/healthz" || true
+    --write-out '%{http_code}' "$url/admin" || true
 }
 echo "Candidate revision: $revision"
 echo "Tagged URL: $candidate"
@@ -52,15 +52,15 @@ ready=false
 for try in {1..12}; do
   code="$(probe "$candidate")"
   got="$(revision_header "$headers")"
-  printf 'Tag probe %02d: HTTP=%s, app-revision=%s\n' "$try" "${code:-000}" "${got:-absent}"
-  if [[ "$code" == 200 && "$got" == "$revision" && "$(cat "$body")" == ok ]]; then
+  printf 'Admin probe %02d: HTTP=%s, app-revision=%s\n' "$try" "${code:-000}" "${got:-absent}"
+  if [[ "$code" == 200 && "$got" == "$revision" ]] && grep -q 'id="login-form"' "$body" && grep -q 'id="redeem-link"' "$body"; then
     ready=true
     break
   fi
   if (( try < 12 )); then sleep 5; fi
 done
 if ! $ready; then
-  echo 'STOP: tagged revision failed /healthz. Production traffic was NOT changed.' >&2
+  echo 'STOP: tagged revision did not serve expected /admin HTML. Production traffic was NOT changed.' >&2
   if [[ "$(revision_header "$headers")" == '' ]]; then
     echo 'Missing X-SVM-Revision header: the 404 may be upstream of the Go app.' >&2
   fi
