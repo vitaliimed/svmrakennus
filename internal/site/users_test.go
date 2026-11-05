@@ -11,8 +11,8 @@ import (
 
 func TestIndependentEmailAccountsAndOwnerApproval(t *testing.T) {
 	a := testApp(t)
-	t.Setenv("ADMIN_EMAIL", "service@svmrakennus.fi")
-	t.Setenv("ADMIN_RECOVERY_EMAIL", "owner@example.org")
+	t.Setenv("ADMIN_EMAIL", "")
+	t.Setenv("ADMIN_RECOVERY_EMAIL", "")
 	t.Setenv("ADMIN_BASE_URL", "https://svmrakennus.fi")
 	sent := map[string]string{}
 	a.accountMailer = func(_ context.Context, to, subject, body, reply string) error {
@@ -59,6 +59,15 @@ func TestIndependentEmailAccountsAndOwnerApproval(t *testing.T) {
 		return w.Result().Cookies()[0], out["csrf"]
 	}
 
+	// The first owner is explicitly provisioned by a Google Cloud operator,
+	// never inferred from a mailbox or from public registration.
+	seed := adminUser{Email:"owner@example.org",Role:"owner",Status:"active",Created:now(),Version:1}
+	if err := a.saveUser(context.Background(), userKey(seed.Email), seed, "create"); err != nil {
+		t.Fatal(err)
+	}
+	if w := request(a,"POST","/api/password-link",strings.NewReader(`{"email":"service@svmrakennus.fi"}`),nil,""); w.Code != 400 {
+		t.Fatal("corporate sender must not be a login account",w.Code)
+	}
 	ownerToken := requestLink("owner@example.org")
 	if text := setPassword(ownerToken, "owner-password-strong", 200); !strings.Contains(text, `"status":"active"`) {
 		t.Fatal("configured recovery owner should be active", text)
@@ -100,6 +109,22 @@ func TestIndependentEmailAccountsAndOwnerApproval(t *testing.T) {
 	}
 	login("staff@example.org", "staff-password-strong", 401)
 	staffCookie, _ = login("staff@example.org", "another-staff-password", 200)
+	promote := fmt.Sprintf(`{"id":%q,"action":"promote"}`, userID)
+	if w := request(a, "PATCH", "/api/admin/users", strings.NewReader(promote), ownerCookie, ownerCSRF); w.Code != 200 {
+		t.Fatal("owner promotion failed", w.Body.String())
+	}
+	if w := request(a,"GET","/api/admin/state",nil,staffCookie,""); w.Code != 401 {
+		t.Fatal("role change should revoke user sessions")
+	}
+	staffCookie, _ = login("staff@example.org","another-staff-password",200)
+	if w := request(a, "GET", "/api/admin/users", nil, staffCookie, ""); w.Code != 200 {
+		t.Fatal("promoted administrator should see users")
+	}
+	demote := fmt.Sprintf(`{"id":%q,"action":"demote"}`, userID)
+	if w := request(a,"PATCH","/api/admin/users",strings.NewReader(demote),ownerCookie,ownerCSRF); w.Code != 200 {
+		t.Fatal("owner demotion failed",w.Body.String())
+	}
+	staffCookie, _ = login("staff@example.org","another-staff-password",200)
 	login("owner@example.org", "owner-password-strong", 200)
 	disable := fmt.Sprintf(`{"id":%q,"action":"disable"}`, userID)
 	if w := request(a, "PATCH", "/api/admin/users", strings.NewReader(disable), ownerCookie, ownerCSRF); w.Code != 200 {
