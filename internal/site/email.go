@@ -44,16 +44,21 @@ func (a *App) sendNotification(ctx context.Context, s State, l Lead, confirmatio
 	return sendEmail(ctx, to, subject, body, replyTo)
 }
 
+const systemSenderEmail = "service@svmrakennus.fi"
+
 func sendEmail(ctx context.Context, to, subject, body, reply string) error {
 	host := os.Getenv("SMTP_HOST")
 	user := os.Getenv("SMTP_USER")
 	password := os.Getenv("SMTP_PASSWORD")
-	from := os.Getenv("SMTP_FROM")
+	from := systemSenderEmail
+	if configured := os.Getenv("SMTP_FROM"); configured != "" && !strings.EqualFold(configured, systemSenderEmail) {
+		return fmt.Errorf("SMTP_FROM must equal %s", systemSenderEmail)
+	}
 	port := os.Getenv("SMTP_PORT")
 	if port == "" {
 		port = "587"
 	}
-	if host == "" || from == "" {
+	if host == "" {
 		return fmt.Errorf("SMTP is not configured; lead remains available in the admin panel")
 	}
 	fa, e := mail.ParseAddress(from)
