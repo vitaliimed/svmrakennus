@@ -134,26 +134,23 @@ func (a *App) sendUserLink(ctx context.Context, email string, invite bool) error
 	if !validEmail(email) {
 		return errors.New("invalid email")
 	}
+	if email == systemSenderEmail {
+		return errors.New("system email cannot be a user")
+	}
 	key := userKey(email)
 	for attempt := 0; attempt < 4; attempt++ {
 		user, version, err := a.loadUser(ctx, key)
 		if errors.Is(err, ErrNotFound) {
 			user = adminUser{Email: email, Role: "editor", Status: "pending", Created: now()}
 			version = "create"
-			if ownerIdentity(email) {
-				user.Role = "owner"
-				user.Status = "active"
-			}
+
 		} else if err != nil {
 			return err
 		}
 		if user.Status == "disabled" && !invite {
 			return nil
 		}
-		if user.Role == "owner" || ownerIdentity(email) {
-			user.Role = "owner"
-			user.Status = "active"
-		} else if invite {
+		if invite {
 			user.Status = "active"
 		}
 		// Throttle repeated reset requests across Cloud Run instances.
@@ -214,6 +211,10 @@ func (a *App) userAccount(w http.ResponseWriter, r *http.Request) {
 			fail(w, http.StatusBadRequest, "Enter a valid email address")
 			return
 		}
+		if normalizedEmail(input.Email) == systemSenderEmail {
+			fail(w, http.StatusBadRequest, "Company mailbox is reserved for outgoing email")
+			return
+		}
 		key := userKey(input.Email)
 		if !a.rates.allow("user-link:"+key, 3, 30*time.Minute) {
 			jsonOut(w, http.StatusOK, map[string]bool{"ok": true})
@@ -232,6 +233,10 @@ func (a *App) userAccount(w http.ResponseWriter, r *http.Request) {
 	}
 	// Previously issued single-owner links remain redeemable during migration.
 	if strings.Count(input.Token, ".") == 3 {
+		if a.production {
+			fail(w, http.StatusBadRequest, "Request a new link for an individual account")
+			return
+		}
 		data, _ := json.Marshal(input)
 		r.Body = io.NopCloser(bytes.NewReader(data))
 		a.account(w, r)
@@ -319,8 +324,8 @@ func (a *App) userSessionInfo(ctx context.Context, sess session) (string, string
 
 func (a *App) usersAPI(w http.ResponseWriter, r *http.Request, sess session) {
 	_, role := a.userSessionInfo(r.Context(), sess)
-	if role != "owner" {
-		fail(w, http.StatusForbidden, "Only the site owner can manage users")
+	if role != "owner" && role != "admin" {
+		fail(w, http.StatusForbidden, "Only administrators can manage users")
 		return
 	}
 	if r.Method == "GET" {
@@ -333,7 +338,7 @@ func (a *App) usersAPI(w http.ResponseWriter, r *http.Request, sess session) {
 		for _, record := range records {
 			key := strings.TrimPrefix(record.Key, "users/")
 			var u adminUser
-			if json.Unmarshal(record.Data, &u) != nil || !validEmail(u.Email) {
+			if json.Unmarshal(record.Data, &u) != nil || !validEmail(u.Email) || normalizedEmail(u.Email) == systemSenderEmail {
 				continue
 			}
 			out = append(out, adminUserView{ID: key, Email: u.Email, Role: u.Role,
@@ -347,9 +352,20 @@ func (a *App) usersAPI(w http.ResponseWriter, r *http.Request, sess session) {
 		var input struct {
 			Email string `json:"email"`
 		}
-		if decodeJSON(w, r, &input, 4096) != nil || !validEmail(strings.TrimSpace(input.Email)) {
+		if decodeJSON(w, r, &input, 4096) != nil || !validEmail(strings.TrimSpace(input.Email)) || normalizedEmail(input.Email) == systemSenderEmail {
 			fail(w, http.StatusBadRequest, "Enter a valid email address")
 			return
+		}
+		if role == "admin" {
+			existing, _, err := a.loadUser(r.Context(), userKey(input.Email))
+			if err != nil && !errors.Is(err, ErrNotFound) {
+				fail(w, http.StatusServiceUnavailable, "Cannot check user role")
+				return
+			}
+			if err == nil && (existing.Role == "owner" || existing.Role == "admin") {
+				fail(w, http.StatusForbidden, "Administrators cannot invite or reset privileged accounts")
+				return
+			}
 		}
 		if err := a.sendUserLink(r.Context(), input.Email, true); err != nil {
 			fail(w, http.StatusBadGateway, "Could not send invitation email")
@@ -367,7 +383,7 @@ func (a *App) usersAPI(w http.ResponseWriter, r *http.Request, sess session) {
 		Action string `json:"action"`
 	}
 	if decodeJSON(w, r, &input, 4096) != nil || !userKeyRE.MatchString(input.ID) ||
-		(input.Action != "approve" && input.Action != "disable") {
+		(input.Action != "approve" && input.Action != "disable" && input.Action != "promote" && input.Action != "demote") {
 		fail(w, http.StatusBadRequest, "Invalid user action")
 		return
 	}
@@ -382,13 +398,31 @@ func (a *App) usersAPI(w http.ResponseWriter, r *http.Request, sess session) {
 			return
 		}
 		if user.Role == "owner" {
-			fail(w, http.StatusForbidden, "Owner accounts cannot be disabled")
+			fail(w, http.StatusForbidden, "Owner account cannot be changed")
 			return
 		}
-		if input.Action == "approve" {
+		if role != "owner" && user.Role == "admin" {
+			fail(w, http.StatusForbidden, "Only owners can manage administrators")
+			return
+		}
+		switch input.Action {
+		case "approve":
 			user.Status = "active"
-		} else {
+		case "disable":
 			user.Status = "disabled"
+		case "promote":
+			if role != "owner" || user.Role != "editor" || !user.Verified {
+				fail(w, http.StatusForbidden, "Only an owner may promote a verified editor")
+				return
+			}
+			user.Role = "admin"
+			user.Status = "active"
+		case "demote":
+			if role != "owner" || user.Role != "admin" {
+				fail(w, http.StatusForbidden, "Only an owner may change administrator roles")
+				return
+			}
+			user.Role = "editor"
 		}
 		user.Version++ // revoke existing sessions whenever access changes
 		user.Updated = now()

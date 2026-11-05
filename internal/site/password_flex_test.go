@@ -18,6 +18,11 @@ func TestShortPasswordAllowedAndEmptyRejected(t *testing.T) {
 		message = body
 		return nil
 	}
+	// Administrator identity must be provisioned explicitly, not inferred from ADMIN_EMAIL.
+	user := adminUser{Email: "owner@example.org", Role: "owner", Status: "active", Created: now(), Version: 1}
+	if err := a.saveUser(context.Background(), userKey(user.Email), user, "create"); err != nil {
+		t.Fatal(err)
+	}
 	requestBody := strings.NewReader(`{"email":"owner@example.org"}`)
 	w := request(a, "POST", "/api/password-link", requestBody, nil, "")
 	if w.Code != http.StatusOK {

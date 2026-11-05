@@ -15,4 +15,5 @@ node scripts/test-tracking.cjs
 node scripts/test-admin.cjs
 for file in scripts/*.sh; do bash -n "$file"; done
 python3 scripts/check-content.py
+python3 -c 'import ast; from pathlib import Path; ast.parse(Path("scripts/provision-first-owner.py").read_text())'
 echo 'All checks passed.'

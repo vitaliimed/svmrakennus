@@ -8,7 +8,8 @@ read -r -p 'SMTP host: ' smtp_host
 read -r -p 'SMTP port [587]: ' smtp_port
 smtp_port="${smtp_port:-587}"
 read -r -p 'SMTP login: ' smtp_user
-read -r -p 'Verified sender email: ' smtp_from
+smtp_from="service@svmrakennus.fi"
+echo "Fixed verified sender (must be authorised at your SMTP provider): $smtp_from"
 read -r -s -p 'SMTP password: ' smtp_password
 printf '\n'
 [[ "$smtp_port" =~ ^(465|587|2525)$ ]] || { echo 'Allowed ports: 465, 587, 2525' >&2; exit 1; }
@@ -26,4 +27,4 @@ gcloud secrets add-iam-policy-binding "$smtp_secret" --member "serviceAccount:$S
 gcloud run services update "$SITE_SERVICE" --project "$PROJECT_ID" --region "$SITE_REGION" \
   --update-env-vars "SMTP_HOST=$smtp_host,SMTP_PORT=$smtp_port,SMTP_USER=$smtp_user,SMTP_FROM=$smtp_from" \
   --update-secrets "SMTP_PASSWORD=$smtp_secret:latest"
-echo 'SMTP configured. Set the notification recipient in the admin and send a test email.'
+echo 'SMTP configured. Corporate sender is service@svmrakennus.fi; verify it in the provider first. Set notification recipients in admin and send a test email.'

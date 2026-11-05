@@ -6,7 +6,7 @@ function element(selector){if(!elements.has(selector))elements.set(selector,{inn
 const state={...structuredClone(defaults),pageHTML:{}},context={console,Intl,Date,JSON,FormData,URLSearchParams,Number,String,Array,Set,Map,Error,Promise,structuredClone,
  document:{querySelector:element,querySelectorAll:()=>[],addEventListener:(type,fn)=>{if(!listeners.has(type))listeners.set(type,[]);listeners.get(type).push(fn)}},
  window:{scrollTo(){},addEventListener(){}},navigator:{clipboard:{writeText:async()=>{}}},setTimeout:()=>0,clearTimeout(){},confirm:()=>true,
- fetch:async(url,options={})=>{requests.push({url,options});const path=url.replace('/api/admin/','');let data;if(path==='session')data={csrf:'test-csrf',weakPassword:true,role:'owner',email:'service@svmrakennus.fi'};else if(path==='state')data=structuredClone(state);else if(path==='leads'||path==='media'||path==='users')data=[];else data={ok:true};return {ok:true,status:200,json:async()=>data};}
+ fetch:async(url,options={})=>{requests.push({url,options});const path=url.replace('/api/admin/','');let data;if(path==='session')data={csrf:'test-csrf',weakPassword:true,role:'owner',email:'medynikv@gmail.com'};else if(path==='state')data=structuredClone(state);else if(path==='leads'||path==='media'||path==='users')data=[];else data={ok:true};return {ok:true,status:200,json:async()=>data};}
 };context.window=context;context.scrollTo=()=>{};context.addEventListener=()=>{};
 vm.createContext(context);vm.runInContext(fs.readFileSync('web/static/admin.js','utf8'),context);
 async function settle(){await new Promise(resolve=>setImmediate(resolve));}
@@ -21,6 +21,8 @@ function checkPaths(html){for(const match of html.matchAll(/data-path="([^"]+)"/
  assert(!element('#admin-nav').innerHTML.includes('glossary'));
  assert(element('#admin-nav').innerHTML.includes('data-tab="users"'));
  assert((await click({tab:'users'})).includes('Invite a user'));
+ assert((await click({tab:'system'})).includes('System email · fixed'));
+ assert(element('#admin-content').innerHTML.includes('service@svmrakennus.fi'));
  let html=await click({tab:'text'});assert(html.includes('Finnish and English') && html.includes('Uusi elämä'));
  html=await click({editItem:'services:5'});assert(html.includes('Palokatkotyöt') && html.includes('English'));checkPaths(html);
  html=await click({tab:'media'});assert.equal((html.match(/data-delete-media=/g)||[]).length,6);

@@ -121,12 +121,12 @@ func (a *App) session(r *http.Request, state State) (session, error) {
 	}
 	if s.UserID != "" {
 		u, _, err := a.loadUser(r.Context(), s.UserID)
-		if err != nil || u.Version != s.Version || u.Status != "active" || !u.Verified || u.Hash == "" {
+		if err != nil || u.Version != s.Version || u.Status != "active" || !u.Verified || u.Hash == "" || normalizedEmail(u.Email) == systemSenderEmail {
 			return s, errors.New("user session revoked")
 		}
 		return s, nil
 	}
-	if s.Version != state.Auth.Version || (ownerEmail() != "" && a.hasActiveOwner(r.Context())) {
+	if a.production || s.Version != state.Auth.Version || (ownerEmail() != "" && a.hasActiveOwner(r.Context())) {
 		return s, errors.New("session revoked")
 	}
 	return s, nil

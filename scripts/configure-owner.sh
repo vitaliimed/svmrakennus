@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
+[[ -f .deployment.env ]] || { echo 'Run scripts/bootstrap-gcloud.sh first.' >&2; exit 1; }
 source .deployment.env
-site_url=https://svmrakennus.fi
-read -r -p 'Administrator email (must have access to this inbox): ' owner_email
-read -r -p "Public HTTPS origin [$site_url]: " owner_origin
-owner_origin="${owner_origin:-$site_url}"
-[[ "$owner_email" =~ ^[[:alnum:]_.%+-]+@[[:alnum:].-]+\.[[:alpha:]]{2,}$ ]] || { echo 'Invalid email.' >&2; exit 1; }
-[[ "$owner_origin" =~ ^https://[a-zA-Z0-9.-]+$ ]] || { echo 'Expected an HTTPS origin, without a trailing slash.' >&2; exit 1; }
-gcloud run services update "$SITE_SERVICE" --region "$SITE_REGION" --project "$PROJECT_ID" \
-  --update-env-vars "ADMIN_EMAIL=$owner_email,ADMIN_BASE_URL=$owner_origin"
-printf 'Open %s/admin and choose Create or reset your password. The link expires after 30 minutes.\n' "$owner_origin"
+read -r -p 'First owner login email (not service@svmrakennus.fi): ' first_owner
+[[ -n "$first_owner" ]] || { echo 'Email is required.' >&2; exit 1; }
+python3 scripts/provision-first-owner.py \
+  --project "$PROJECT_ID" \
+  --database "$SITE_DATABASE" \
+  --namespace "$SITE_NAMESPACE" \
+  --email "$first_owner"
+printf '%s\n' 'System sender is always service@svmrakennus.fi.' \
+  'The first owner must verify their own inbox and set a password at https://svmrakennus.fi/admin'

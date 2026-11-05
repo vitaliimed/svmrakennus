@@ -25,11 +25,8 @@ fi
 owner_env=""
 if $owner_release; then
   public_url="https://svmrakennus.fi"
-  owner_env=",ADMIN_EMAIL=service@svmrakennus.fi,ADMIN_BASE_URL=$public_url,PUBLIC_SITE_URL=$public_url"
-  if [[ -n "${ADMIN_RECOVERY_EMAIL:-}" ]]; then
-    [[ "$ADMIN_RECOVERY_EMAIL" =~ ^[[:alnum:]_.%+-]+@[[:alnum:].-]+\.[[:alpha:]]{2,}$ ]] || { echo "Invalid recovery address" >&2; exit 1; }
-    owner_env+=",ADMIN_RECOVERY_EMAIL=$ADMIN_RECOVERY_EMAIL"
-  fi
+  # service@svmrakennus.fi is a fixed SMTP sender, never an admin login or recovery destination.
+  owner_env=",ADMIN_EMAIL=,ADMIN_RECOVERY_EMAIL=,SMTP_FROM=service@svmrakennus.fi,ADMIN_BASE_URL=$public_url,PUBLIC_SITE_URL=$public_url"
 fi
 gcloud run deploy "$SITE_SERVICE" \
   --source . "${release_flags[@]}" \
@@ -73,7 +70,7 @@ assert sum(r.get("percent",0) for r in rows if r.get("revisionName")==sys.argv[1
   [[ "$(domain_revision)" == "$revision" ]] || { echo "Cloud Run promoted; check Firebase custom domain and DNS for $public_url" >&2; exit 1; }
   bash scripts/smoke-check.sh "$public_url"
   check_admin "$public_url"
-  printf 'Verified %s serves 100%% of traffic. Owner: service@svmrakennus.fi\n' "$revision"
+  printf 'Verified %s serves 100%% of traffic. Corporate email sender: service@svmrakennus.fi\n' "$revision"
 fi
 SITE_URL="$(gcloud run services describe "$SITE_SERVICE" --project "$PROJECT_ID" --region "$SITE_REGION" --format='value(status.url)')"
 printf 'Website: %s/\nAdmin: %s/admin\n' "${public_url:-$SITE_URL}" "${public_url:-$SITE_URL}"

@@ -134,6 +134,7 @@ func New(files fs.FS) (*App, error) {
 		if len(p) > 256 || len(p) < 5 {
 			return nil, errors.New("invalid initial password length")
 		}
+		s.Settings.Email = systemSenderEmail
 		s.Auth = Auth{Hash: passwordHash(p), Version: 1, Changed: p != "12345"}
 		s.Updated = now()
 		s.Revision = 1
@@ -160,6 +161,8 @@ func (a *App) loadState(ctx context.Context) (State, string, error) {
 	if base := os.Getenv("PUBLIC_SITE_URL"); base != "" {
 		s.Settings.BaseURL = base
 	}
+	// The company mailbox is fixed for public contacts and transactional sending.
+	s.Settings.Email = systemSenderEmail
 	return s, r.Version, e
 }
 func (a *App) Handler() http.Handler {
@@ -292,7 +295,15 @@ func (a *App) login(w http.ResponseWriter, r *http.Request) {
 		fail(w, 400, "Invalid request")
 		return
 	}
+	if normalizedEmail(v.Email) == systemSenderEmail {
+		fail(w, http.StatusUnauthorized, "System email is reserved for sending messages")
+		return
+	}
 	if strings.TrimSpace(v.Email) != "" && a.loginKnownUser(w, r, v.Email, v.Password) {
+		return
+	}
+	if a.production {
+		fail(w, http.StatusUnauthorized, "Incorrect credentials")
 		return
 	}
 	s, _, e := a.loadState(r.Context())
@@ -317,7 +328,7 @@ func (a *App) adminPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if e := a.templates.ExecuteTemplate(w, "admin.html", map[string]bool{"EmailLogin": ownerEmail() != ""}); e != nil {
+	if e := a.templates.ExecuteTemplate(w, "admin.html", map[string]bool{"EmailLogin": a.production || ownerEmail() != ""}); e != nil {
 		log.Print("admin render failed")
 	}
 }
@@ -371,6 +382,7 @@ func (a *App) adminAPI(w http.ResponseWriter, r *http.Request) {
 		if base := os.Getenv("PUBLIC_SITE_URL"); base != "" {
 			incoming.Settings.BaseURL = base
 		}
+		incoming.Settings.Email = systemSenderEmail
 		incoming.Auth = state.Auth
 		autoRedirects(state, &incoming)
 		incoming.Revision = state.Revision + 1
