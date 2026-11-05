@@ -1,0 +1,27 @@
+name: Format branded email feature source
+on:
+  push:
+    branches: [feature/branded-lead-emails-20261105]
+permissions:
+  contents: write
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Format Go email implementation and tests
+        run: gofmt -w internal/site/*.go
+      - name: Commit formatting when needed
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add internal/site/*.go
+          if ! git diff --cached --quiet; then
+            git commit -m "style: gofmt branded transactional email feature"
+            git push origin HEAD:feature/branded-lead-emails-20261105
+          fi
