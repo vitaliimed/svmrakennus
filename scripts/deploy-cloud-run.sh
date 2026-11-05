@@ -49,6 +49,21 @@ print(next(r["url"] for r in rows if r.get("tag")==sys.argv[1] and r.get("revisi
 s=sys.stdin.read()
 assert all(marker in s for marker in ("<html lang=\"en\">","id=\"request-link\"","id=\"redeem-link\"")), "English owner recovery missing"'
   }
+  # Cloud Run traffic-tag routes may not become available immediately after deploy.
+  # Never promote a revision until its tagged health endpoint is reachable.
+  candidate_healthy=false
+  for attempt in {1..12}; do
+    if [[ "$(curl -sS --max-time 20 "$candidate/healthz" 2>/dev/null || true)" == "ok" ]]; then
+      candidate_healthy=true
+      break
+    fi
+    if (( attempt < 12 )); then sleep 5; fi
+  done
+  if ! $candidate_healthy; then
+    echo "Tagged revision /healthz did not become healthy; keeping existing production traffic." >&2
+    echo "To resume this already-built revision, use scripts/resume-owner-release.sh $revision" >&2
+    exit 1
+  fi
   bash scripts/smoke-check.sh "$candidate"
   check_admin "$candidate"
   gcloud run services update-traffic "$SITE_SERVICE" "${scope[@]}" --to-revisions "$revision=100" --remove-tags "$suffix"
