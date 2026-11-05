@@ -324,8 +324,8 @@ func (a *App) userSessionInfo(ctx context.Context, sess session) (string, string
 
 func (a *App) usersAPI(w http.ResponseWriter, r *http.Request, sess session) {
 	_, role := a.userSessionInfo(r.Context(), sess)
-	if role != "owner" {
-		fail(w, http.StatusForbidden, "Only the site owner can manage users")
+	if role != "owner" && role != "admin" {
+		fail(w, http.StatusForbidden, "Only administrators can manage users")
 		return
 	}
 	if r.Method == "GET" {
@@ -372,7 +372,7 @@ func (a *App) usersAPI(w http.ResponseWriter, r *http.Request, sess session) {
 		Action string `json:"action"`
 	}
 	if decodeJSON(w, r, &input, 4096) != nil || !userKeyRE.MatchString(input.ID) ||
-		(input.Action != "approve" && input.Action != "disable") {
+		(input.Action != "approve" && input.Action != "disable" && input.Action != "promote" && input.Action != "demote") {
 		fail(w, http.StatusBadRequest, "Invalid user action")
 		return
 	}
