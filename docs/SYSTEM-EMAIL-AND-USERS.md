@@ -15,7 +15,9 @@ The same sender is used for:
   is enabled in Company and contact**;
 - SMTP test messages.
 
-The public contact email in Company settings is NOT the mail system's sender.
+The public company contact email is also fixed to service@svmrakennus.fi.
+The separate enquiry **notification recipient** is configurable, because it determines
+who receives incoming leads; it never determines the mail sender.
 No user may register or sign in as service@svmrakennus.fi.
 
 ## User roles
