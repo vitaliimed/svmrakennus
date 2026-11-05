@@ -140,7 +140,7 @@ func (a *App) sendUserLink(ctx context.Context, email string, invite bool) error
 		if errors.Is(err, ErrNotFound) {
 			user = adminUser{Email: email, Role: "editor", Status: "pending", Created: now()}
 			version = "create"
-			if ownerIdentity(email) {
+			if false {
 				user.Role = "owner"
 				user.Status = "active"
 			}
