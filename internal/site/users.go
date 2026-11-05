@@ -387,13 +387,31 @@ func (a *App) usersAPI(w http.ResponseWriter, r *http.Request, sess session) {
 			return
 		}
 		if user.Role == "owner" {
-			fail(w, http.StatusForbidden, "Owner accounts cannot be disabled")
+			fail(w, http.StatusForbidden, "Owner account cannot be changed")
 			return
 		}
-		if input.Action == "approve" {
+		if role != "owner" && user.Role == "admin" {
+			fail(w, http.StatusForbidden, "Only owners can manage administrators")
+			return
+		}
+		switch input.Action {
+		case "approve":
 			user.Status = "active"
-		} else {
+		case "disable":
 			user.Status = "disabled"
+		case "promote":
+			if role != "owner" || user.Role != "editor" || !user.Verified {
+				fail(w, http.StatusForbidden, "Only an owner may promote a verified editor")
+				return
+			}
+			user.Role = "admin"
+			user.Status = "active"
+		case "demote":
+			if role != "owner" || user.Role != "admin" {
+				fail(w, http.StatusForbidden, "Only an owner may change administrator roles")
+				return
+			}
+			user.Role = "editor"
 		}
 		user.Version++ // revoke existing sessions whenever access changes
 		user.Updated = now()
