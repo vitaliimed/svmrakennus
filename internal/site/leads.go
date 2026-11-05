@@ -243,7 +243,7 @@ func (a *App) submitLead(w http.ResponseWriter, r *http.Request) {
 		fail(w, 403, "Form expired; reload the page")
 		return
 	}
-	l := Lead{ID: token.CSRF, Created: now(), Name: strings.TrimSpace(r.FormValue("name")), Company: strings.TrimSpace(r.FormValue("company")), Email: strings.TrimSpace(r.FormValue("email")), Phone: strings.TrimSpace(r.FormValue("phone")), Service: r.FormValue("service"), Message: strings.TrimSpace(r.FormValue("message")), Language: r.FormValue("language"), Status: "new", Files: []Media{}, Campaign: map[string]string{}, Consent: r.FormValue("consent") == "on", EmailStatus: "pending"}
+	l := Lead{ID: token.CSRF, Created: now(), Name: strings.TrimSpace(r.FormValue("name")), Company: strings.TrimSpace(r.FormValue("company")), Email: strings.TrimSpace(r.FormValue("email")), Phone: strings.TrimSpace(r.FormValue("phone")), Service: r.FormValue("service"), Message: strings.TrimSpace(r.FormValue("message")), Language: r.FormValue("language"), Status: "new", Files: []Media{}, Campaign: map[string]string{}, Consent: r.FormValue("consent") == "on", EmailStatus: "pending", ConfirmationEmailStatus: "pending"}
 	if l.Language != "fi" {
 		l.Language = "en"
 	}
@@ -320,10 +320,8 @@ func (a *App) submitLead(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Send within the request: Cloud Run may suspend CPU after the response.
-	a.attemptEmail(r.Context(), s, l.ID)
-	if s.Settings.ReplyConfirmation {
-		_ = a.mailer(r.Context(), s, l, true)
-	}
+	_ = a.attemptEmail(r.Context(), s, l.ID)
+	_ = a.attemptConfirmation(r.Context(), s, l.ID)
 	a.leadSuccess(w, r, l)
 }
 func (a *App) leadSuccess(w http.ResponseWriter, r *http.Request, l Lead) {
@@ -372,6 +370,49 @@ func (a *App) attemptEmail(ctx context.Context, s State, id string) error {
 	}
 	return sendError
 }
+
+// Independently persist customer delivery so it can be retried without
+// sending the administrator notification again. Existing archived leads
+// with no confirmation status are not retroactively emailed.
+func (a *App) attemptConfirmation(ctx context.Context, state State, id string) error {
+	rec, err := a.store.Get(ctx, "leads/"+id)
+	if err != nil {
+		return err
+	}
+	var lead Lead
+	if err = json.Unmarshal(rec.Data, &lead); err != nil {
+		return err
+	}
+	if lead.ConfirmationEmailStatus == "" || lead.ConfirmationEmailStatus == "sent" {
+		return nil
+	}
+	if lead.ConfirmationEmailStatus == "sending" {
+		last, _ := time.Parse(time.RFC3339, lead.ConfirmationEmailLastAttempt)
+		if time.Since(last) < 15*time.Minute {
+			return errors.New("customer confirmation is already being sent")
+		}
+	}
+	lead.ConfirmationEmailStatus = "sending"
+	lead.ConfirmationEmailAttempts++
+	lead.ConfirmationEmailLastAttempt = now()
+	raw, _ := json.Marshal(lead)
+	version, err := a.store.Put(ctx, "leads/"+id, raw, rec.Version)
+	if err != nil {
+		return err
+	}
+	sendErr := a.mailer(ctx, state, lead, true)
+	if sendErr == nil {
+		lead.ConfirmationEmailStatus = "sent"
+	} else {
+		lead.ConfirmationEmailStatus = "failed"
+	}
+	raw, _ = json.Marshal(lead)
+	if _, err = a.store.Put(ctx, "leads/"+id, raw, version); err != nil {
+		return fmt.Errorf("customer email attempted but delivery status could not be saved: %w", err)
+	}
+	return sendErr
+}
+
 func (a *App) listLeads(ctx context.Context) ([]Lead, error) {
 	records, e := a.store.List(ctx, "leads")
 	if e != nil {
@@ -494,8 +535,10 @@ func (a *App) retryEmail(w http.ResponseWriter, r *http.Request, s State) {
 		fail(w, 400, "Invalid lead ID")
 		return
 	}
-	if e := a.attemptEmail(r.Context(), s, v.ID); e != nil {
-		fail(w, 502, e.Error())
+	adminErr := a.attemptEmail(r.Context(), s, v.ID)
+	customerErr := a.attemptConfirmation(r.Context(), s, v.ID)
+	if adminErr != nil || customerErr != nil {
+		fail(w, 502, fmt.Sprintf("Admin delivery: %v; customer confirmation: %v", adminErr, customerErr))
 		return
 	}
 	jsonOut(w, 200, map[string]bool{"ok": true})

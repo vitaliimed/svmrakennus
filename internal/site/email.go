@@ -15,38 +15,34 @@ import (
 	_ "time/tzdata"
 )
 
+const adminLeadInbox = "svmrakennus@gmail.com"
+
 func (a *App) sendNotification(ctx context.Context, s State, l Lead, confirmation bool) error {
-	to := s.Settings.NotificationEmail
-	if to == "" {
-		to = os.Getenv("MAIL_TO")
-	}
-	if to == "" {
-		to = s.Settings.Email
-	}
+	to := adminLeadInbox
+	replyTo := l.Email
 	if confirmation {
 		to = l.Email
+		replyTo = ""
 	}
 	if !validEmail(to) {
 		return fmt.Errorf("valid notification email is required")
 	}
-	subject, body := notificationContent(s, l)
-	for _, m := range l.Files {
-		body += "\nПриватне вкладення (потрібен вхід до кабінету): " + s.Settings.BaseURL + m.URL
-	}
-	if confirmation {
-		subject = s.Text[l.Language]["confirmation.subject"]
-		body = s.Text[l.Language]["confirmation.body"] + "\n\n" + s.Settings.Company + "\n" + s.Settings.Phone + "\n" + s.Settings.Email
-	}
-	replyTo := ""
+	subject, plain := emailPlainBody(s, l, confirmation)
 	if !confirmation {
-		replyTo = l.Email
+		for _, file := range l.Files {
+			plain += "\nPrivate attachment (admin access required): " + file.Name
+		}
 	}
-	return sendEmail(ctx, to, subject, body, replyTo)
+	return sendHTMLEmail(ctx, to, subject, plain, brandedEmailHTML(s, l, confirmation), replyTo)
 }
 
 const systemSenderEmail = "service@svmrakennus.fi"
 
 func sendEmail(ctx context.Context, to, subject, body, reply string) error {
+	return sendHTMLEmail(ctx, to, subject, body, "", reply)
+}
+
+func sendHTMLEmail(ctx context.Context, to, subject, body, htmlBody, reply string) error {
 	host := os.Getenv("SMTP_HOST")
 	user := os.Getenv("SMTP_USER")
 	password := os.Getenv("SMTP_PASSWORD")
@@ -66,17 +62,21 @@ func sendEmail(ctx context.Context, to, subject, body, reply string) error {
 		return fmt.Errorf("invalid SMTP_FROM")
 	}
 	subject = "=?UTF-8?B?" + base64.StdEncoding.EncodeToString([]byte(cleanLine(subject))) + "?="
-	headers := "From: " + cleanLine(from) + "\r\nTo: " + to + "\r\nSubject: " + subject + "\r\nDate: " + time.Now().Format(time.RFC1123Z) + "\r\nMessage-ID: <" + randomID() + "@" + cleanLine(host) + ">\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n"
+	headers := "From: SVM Rakennus <" + cleanLine(from) + ">\r\nTo: " + to + "\r\nSubject: " + subject + "\r\nDate: " + time.Now().Format(time.RFC1123Z) + "\r\nMessage-ID: <" + randomID() + "@" + cleanLine(host) + ">\r\nMIME-Version: 1.0\r\n"
 	if validEmail(reply) {
 		headers += "Reply-To: " + reply + "\r\n"
 	}
-	encoded := base64.StdEncoding.EncodeToString([]byte(body))
-	var wrapped strings.Builder
-	for len(encoded) > 76 {
-		wrapped.WriteString(encoded[:76] + "\r\n")
-		encoded = encoded[76:]
+	var payload string
+	if htmlBody == "" {
+		headers += "Content-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n"
+		payload = smtpEncodedPart(body)
+	} else {
+		boundary := "svm-" + randomID()
+		headers += "Content-Type: multipart/alternative; boundary=\"" + boundary + "\"\r\n"
+		payload = "--" + boundary + "\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n" +
+			smtpEncodedPart(body) + "--" + boundary + "\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n" +
+			smtpEncodedPart(htmlBody) + "--" + boundary + "--\r\n"
 	}
-	wrapped.WriteString(encoded + "\r\n")
 	p, e := strconv.Atoi(port)
 	if e != nil || (p != 465 && p != 587 && p != 2525) {
 		return fmt.Errorf("SMTP_PORT must be 465, 587 or 2525")
@@ -129,7 +129,7 @@ func sendEmail(ctx context.Context, to, subject, body, reply string) error {
 	if e != nil {
 		return fmt.Errorf("SMTP DATA failed")
 	}
-	if _, e = writer.Write([]byte(headers + "\r\n" + wrapped.String())); e != nil {
+	if _, e = writer.Write([]byte(headers + "\r\n" + payload)); e != nil {
 		return fmt.Errorf("SMTP body failed")
 	}
 	if e = writer.Close(); e != nil {
@@ -137,6 +137,17 @@ func sendEmail(ctx context.Context, to, subject, body, reply string) error {
 	}
 	_ = client.Quit()
 	return nil
+}
+
+func smtpEncodedPart(content string) string {
+	encoded := base64.StdEncoding.EncodeToString([]byte(content))
+	var lines strings.Builder
+	for len(encoded) > 76 {
+		lines.WriteString(encoded[:76] + "\r\n")
+		encoded = encoded[76:]
+	}
+	lines.WriteString(encoded + "\r\n")
+	return lines.String()
 }
 
 func helsinkiTime(value string) string {

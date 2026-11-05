@@ -141,24 +141,27 @@ type Media struct {
 	URL     string `json:"url"`
 }
 type Lead struct {
-	ID               string            `json:"id"`
-	Created          string            `json:"created"`
-	Language         string            `json:"language"`
-	Name             string            `json:"name"`
-	Company          string            `json:"company"`
-	Email            string            `json:"email"`
-	Phone            string            `json:"phone"`
-	Service          string            `json:"service"`
-	Message          string            `json:"message"`
-	Status           string            `json:"status"`
-	Notes            string            `json:"notes"`
-	Source           string            `json:"source"`
-	Campaign         map[string]string `json:"campaign"`
-	Files            []Media           `json:"files"`
-	Consent          bool              `json:"consent"`
-	EmailStatus      string            `json:"emailStatus"`
-	EmailAttempts    int               `json:"emailAttempts"`
-	EmailLastAttempt string            `json:"emailLastAttempt"`
+	ID                           string            `json:"id"`
+	Created                      string            `json:"created"`
+	Language                     string            `json:"language"`
+	Name                         string            `json:"name"`
+	Company                      string            `json:"company"`
+	Email                        string            `json:"email"`
+	Phone                        string            `json:"phone"`
+	Service                      string            `json:"service"`
+	Message                      string            `json:"message"`
+	Status                       string            `json:"status"`
+	Notes                        string            `json:"notes"`
+	Source                       string            `json:"source"`
+	Campaign                     map[string]string `json:"campaign"`
+	Files                        []Media           `json:"files"`
+	Consent                      bool              `json:"consent"`
+	EmailStatus                  string            `json:"emailStatus"`
+	EmailAttempts                int               `json:"emailAttempts"`
+	EmailLastAttempt             string            `json:"emailLastAttempt"`
+	ConfirmationEmailStatus      string            `json:"confirmationEmailStatus,omitempty"`
+	ConfirmationEmailAttempts    int               `json:"confirmationEmailAttempts,omitempty"`
+	ConfirmationEmailLastAttempt string            `json:"confirmationEmailLastAttempt,omitempty"`
 }
 
 func now() string { return time.Now().UTC().Format(time.RFC3339) }

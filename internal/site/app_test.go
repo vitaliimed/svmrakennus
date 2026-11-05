@@ -237,7 +237,7 @@ func TestLeadSurvivesMailFailureAndPrivateFiles(t *testing.T) {
 		t.Fatal(w.Code, w.Body.String())
 	}
 	list, e := a.listLeads(context.Background())
-	if e != nil || len(list) != 1 || list[0].EmailStatus != "failed" {
+	if e != nil || len(list) != 1 || list[0].EmailStatus != "failed" || list[0].ConfirmationEmailStatus != "failed" {
 		t.Fatal("lead was lost on mail failure")
 	}
 	l := list[0]
@@ -259,7 +259,7 @@ func TestLeadSurvivesMailFailureAndPrivateFiles(t *testing.T) {
 		t.Fatal(w.Body.String())
 	}
 	list, _ = a.listLeads(context.Background())
-	if list[0].EmailStatus != "sent" || list[0].EmailAttempts != 2 {
+	if list[0].EmailStatus != "sent" || list[0].EmailAttempts != 2 || list[0].ConfirmationEmailStatus != "sent" || list[0].ConfirmationEmailAttempts != 2 {
 		t.Fatal("retry email status not saved")
 	}
 	w = request(a, "DELETE", "/api/admin/leads?id="+l.ID, nil, cookie, csrf)
@@ -379,7 +379,7 @@ func TestLeadIdempotencyAndImageValidation(t *testing.T) {
 		}
 	}
 	list, _ := a.listLeads(context.Background())
-	if len(list) != 1 || sent != 1 {
+	if len(list) != 1 || sent != 2 {
 		t.Fatal("network retry created duplicate lead or email")
 	}
 	for _, file := range []string{"hero", "interior", "terrace", "craft"} {
