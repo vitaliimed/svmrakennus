@@ -128,43 +128,43 @@ func TestLeadEmailDestinationAndPreviewAreProtected(t *testing.T) {
 }
 
 func TestPartialMailFailureRetriedWithoutDuplicateAdminAlert(t *testing.T) {
-    a := testApp(t)
-    adminMessages := 0
-    clientMessages := 0
-    a.mailer = func(_ context.Context, _ State, _ Lead, customer bool) error {
-        if customer {
-            clientMessages++
-            if clientMessages == 1 {
-                return errors.New("simulated customer mailbox failure")
-            }
-            return nil
-        }
-        adminMessages++
-        return nil
-    }
-    result := submitTestLead(t, a, false)
-    if result.Code != http.StatusCreated {
-        t.Fatal("lead was not saved", result.Body.String())
-    }
-    stored, err := a.listLeads(context.Background())
-    if err != nil || len(stored) != 1 ||
-        stored[0].EmailStatus != "sent" || stored[0].ConfirmationEmailStatus != "failed" {
-        t.Fatal("the two mail statuses were not persisted independently", err)
-    }
-    cookie, csrf := signIn(t, a)
-    body := fmt.Sprintf(`{"id":%q}`, stored[0].ID)
-    for attempt := 0; attempt < 2; attempt++ {
-        w := request(a, "POST", "/api/admin/retry-email", strings.NewReader(body), cookie, csrf)
-        if w.Code != http.StatusOK {
-            t.Fatal("retry failed", w.Body.String())
-        }
-    }
-    if adminMessages != 1 || clientMessages != 2 {
-        t.Fatalf("duplicate mail on retry: admin=%d, customer=%d", adminMessages, clientMessages)
-    }
-    stored, err = a.listLeads(context.Background())
-    if err != nil || stored[0].ConfirmationEmailStatus != "sent" ||
-        stored[0].ConfirmationEmailAttempts != 2 || stored[0].EmailAttempts != 1 {
-        t.Fatal("retry results were not saved", err)
-    }
+	a := testApp(t)
+	adminMessages := 0
+	clientMessages := 0
+	a.mailer = func(_ context.Context, _ State, _ Lead, customer bool) error {
+		if customer {
+			clientMessages++
+			if clientMessages == 1 {
+				return errors.New("simulated customer mailbox failure")
+			}
+			return nil
+		}
+		adminMessages++
+		return nil
+	}
+	result := submitTestLead(t, a, false)
+	if result.Code != http.StatusCreated {
+		t.Fatal("lead was not saved", result.Body.String())
+	}
+	stored, err := a.listLeads(context.Background())
+	if err != nil || len(stored) != 1 ||
+		stored[0].EmailStatus != "sent" || stored[0].ConfirmationEmailStatus != "failed" {
+		t.Fatal("the two mail statuses were not persisted independently", err)
+	}
+	cookie, csrf := signIn(t, a)
+	body := fmt.Sprintf(`{"id":%q}`, stored[0].ID)
+	for attempt := 0; attempt < 2; attempt++ {
+		w := request(a, "POST", "/api/admin/retry-email", strings.NewReader(body), cookie, csrf)
+		if w.Code != http.StatusOK {
+			t.Fatal("retry failed", w.Body.String())
+		}
+	}
+	if adminMessages != 1 || clientMessages != 2 {
+		t.Fatalf("duplicate mail on retry: admin=%d, customer=%d", adminMessages, clientMessages)
+	}
+	stored, err = a.listLeads(context.Background())
+	if err != nil || stored[0].ConfirmationEmailStatus != "sent" ||
+		stored[0].ConfirmationEmailAttempts != 2 || stored[0].EmailAttempts != 1 {
+		t.Fatal("retry results were not saved", err)
+	}
 }
