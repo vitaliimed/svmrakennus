@@ -37,9 +37,11 @@ func brandedEmailHTML(s State, l Lead, customer bool) string {
 		home = u.String()
 	}
 	headerBrand := "<span style=\"display:inline-block;font-weight:800;letter-spacing:-1px;border-radius:6px;padding:9px 12px;background:" + accent + ";color:#ffffff\">SVM</span> <span style=\"font-weight:700;color:" + ink + "\">" + esc(company) + "</span>"
-	if safeFileRef(s.Settings.Logo) && strings.HasPrefix(s.Settings.Logo, "/static/images/") {
+	if safeFileRef(s.Settings.Logo) {
+		isPublicMedia := strings.HasPrefix(s.Settings.Logo, "/media/")
 		ext := strings.ToLower(path.Ext(s.Settings.Logo))
-		if ext == ".png" || ext == ".jpg" || ext == ".jpeg" || ext == ".webp" || ext == ".gif" {
+		isEmailImage := ext == ".png" || ext == ".jpg" || ext == ".jpeg" || ext == ".webp" || ext == ".gif"
+		if isPublicMedia || (strings.HasPrefix(s.Settings.Logo, "/static/images/") && isEmailImage) {
 			logoURL := home + s.Settings.Logo
 			headerBrand = "<img src=\"" + esc(logoURL) + "\" alt=\"" + esc(company) + "\" style=\"max-width:160px;max-height:56px;vertical-align:middle;border:0\"> <span style=\"margin-left:12px;font-weight:700;color:" + ink + "\">" + esc(company) + "</span>"
 		}
