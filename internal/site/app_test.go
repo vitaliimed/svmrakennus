@@ -69,6 +69,20 @@ func putState(t *testing.T, a *App, s State) {
 		t.Fatal(e)
 	}
 }
+func TestCloudRunHealthEndpoint(t *testing.T) {
+	a := testApp(t)
+	w := request(a, "GET", "/health", nil, nil, "")
+	if w.Code != http.StatusOK || strings.TrimSpace(w.Body.String()) != "ok" {
+		t.Fatalf("public /health must return HTTP 200 ok; got %d %s", w.Code, w.Body.String())
+	}
+	if w.Header().Get("Content-Type") != "text/plain; charset=utf-8" {
+		t.Fatal("unexpected health content type")
+	}
+	w = request(a, "POST", "/health", nil, nil, "")
+	if w.Code != http.StatusMethodNotAllowed {
+		t.Fatalf("health must be read-only, got %d", w.Code)
+	}
+}
 func TestRenderedPagesAndSEO(t *testing.T) {
 	a := testApp(t)
 	for _, path := range []string{"/", "/en", "/en/services/firestopping/", "/services/renovation/", "/en/projects/home-renovation/", "/privacy/", "/en/cookies/", "/en/terms/", "/en/thank-you/", "/admin"} {

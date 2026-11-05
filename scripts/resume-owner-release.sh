@@ -16,6 +16,13 @@ scope=(--project "$PROJECT_ID" --region "$SITE_REGION")
 site="https://svmrakennus.fi"
 service_json="$(gcloud run services describe "$SITE_SERVICE" "${scope[@]}" --format=json)"
 latest_ready="$(printf '%s' "$service_json" | python3 -c 'import json,sys; print(json.load(sys.stdin)["status"].get("latestReadyRevisionName", ""))')"
+old_revision="$(printf '%s' "$service_json" | python3 -c '
+import json,sys
+rows=json.load(sys.stdin)["status"]["traffic"]
+old=[r["revisionName"] for r in rows if r.get("percent")==100]
+if len(old)!=1: sys.exit("Expected one current 100% revision")
+print(old[0])
+')"
 [[ "$latest_ready" == "$revision" ]] || {
   echo "Requested revision is not latest ready ($latest_ready). No traffic changed." >&2; exit 1;
 }
@@ -36,7 +43,21 @@ origin="$(printf '%s' "$service_json" | python3 -c 'import json,sys; print(json.
 [[ "$origin" == https://*.run.app ]] || { echo 'Missing main Cloud Run URL' >&2; exit 1; }
 headers="$(mktemp)"
 body="$(mktemp)"
-trap 'rm -f "$headers" "$body"' EXIT
+promoted=false
+release_completed=false
+cleanup_and_rollback() {
+  exit_code=$?
+  trap - EXIT
+  if [[ "$promoted" == true && "$release_completed" != true ]]; then
+    echo "ROLLBACK: restoring 100% traffic to $old_revision" >&2
+    if ! gcloud run services update-traffic "$SITE_SERVICE" "${scope[@]}" --to-revisions "$old_revision=100"; then
+      echo "CRITICAL: automatic traffic rollback failed, check Cloud Run immediately." >&2
+    fi
+  fi
+  rm -f "$headers" "$body"
+  exit "$exit_code"
+}
+trap cleanup_and_rollback EXIT
 revision_header() {
   awk 'tolower($1)=="x-svm-revision:" {gsub(/\r/, "", $2); print $2}' "$1" | tail -n 1
 }
@@ -44,7 +65,7 @@ probe() {
   local url="$1"
   : >"$headers"; : >"$body"
   curl -sS --connect-timeout 8 --max-time 25 --dump-header "$headers" --output "$body" \
-    --write-out '%{http_code}' "$url/healthz" || true
+    --write-out '%{http_code}' "$url/admin" || true
 }
 echo "Candidate revision: $revision"
 echo "Tagged URL: $candidate"
@@ -52,15 +73,15 @@ ready=false
 for try in {1..12}; do
   code="$(probe "$candidate")"
   got="$(revision_header "$headers")"
-  printf 'Tag probe %02d: HTTP=%s, app-revision=%s\n' "$try" "${code:-000}" "${got:-absent}"
-  if [[ "$code" == 200 && "$got" == "$revision" && "$(cat "$body")" == ok ]]; then
+  printf 'Admin probe %02d: HTTP=%s, app-revision=%s\n' "$try" "${code:-000}" "${got:-absent}"
+  if [[ "$code" == 200 && "$got" == "$revision" ]] && grep -q 'id="login-form"' "$body" && grep -q 'id="redeem-link"' "$body"; then
     ready=true
     break
   fi
   if (( try < 12 )); then sleep 5; fi
 done
 if ! $ready; then
-  echo 'STOP: tagged revision failed /healthz. Production traffic was NOT changed.' >&2
+  echo 'STOP: tagged revision did not serve expected /admin HTML. Production traffic was NOT changed.' >&2
   if [[ "$(revision_header "$headers")" == '' ]]; then
     echo 'Missing X-SVM-Revision header: the 404 may be upstream of the Go app.' >&2
   fi
@@ -84,6 +105,7 @@ print("PASS: Users editor and immutable corporate sender")
 '
 
 echo "===== Promoting verified revision to 100% ====="
+promoted=true
 gcloud run services update-traffic "$SITE_SERVICE" "${scope[@]}" \
   --to-revisions "$revision=100" --remove-tags "$tag"
 gcloud run services describe "$SITE_SERVICE" "${scope[@]}" --format=json | python3 -c '
@@ -123,4 +145,5 @@ if ! check_headers "$site"; then
   }
 fi
 bash scripts/smoke-check.sh "$site"
+release_completed=true
 echo "RELEASE VERIFIED: $revision, Cloud Run 100%, production domain $site"
