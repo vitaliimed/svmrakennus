@@ -1,0 +1,27 @@
+name: Format admin-mailer branch Go files
+on:
+  push:
+    branches: [codex/system-mailer-users-roles-20261105]
+permissions:
+  contents: write
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Format all Go files
+        run: gofmt -w internal/site/*.go
+      - name: Commit changes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add internal/site/*.go
+          if ! git diff --cached --quiet; then
+            git commit -m "style: gofmt corporate mailer and roles"
+            git push origin HEAD:codex/system-mailer-users-roles-20261105
+          fi
