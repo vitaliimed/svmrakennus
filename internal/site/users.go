@@ -134,6 +134,9 @@ func (a *App) sendUserLink(ctx context.Context, email string, invite bool) error
 	if !validEmail(email) {
 		return errors.New("invalid email")
 	}
+	if email == systemSenderEmail {
+		return errors.New("system email cannot be a user")
+	}
 	key := userKey(email)
 	for attempt := 0; attempt < 4; attempt++ {
 		user, version, err := a.loadUser(ctx, key)
