@@ -292,7 +292,15 @@ func (a *App) login(w http.ResponseWriter, r *http.Request) {
 		fail(w, 400, "Invalid request")
 		return
 	}
+	if normalizedEmail(v.Email) == systemSenderEmail {
+		fail(w, http.StatusUnauthorized, "System email is reserved for sending messages")
+		return
+	}
 	if strings.TrimSpace(v.Email) != "" && a.loginKnownUser(w, r, v.Email, v.Password) {
+		return
+	}
+	if a.production {
+		fail(w, http.StatusUnauthorized, "Incorrect credentials")
 		return
 	}
 	s, _, e := a.loadState(r.Context())
@@ -317,7 +325,7 @@ func (a *App) adminPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if e := a.templates.ExecuteTemplate(w, "admin.html", map[string]bool{"EmailLogin": ownerEmail() != ""}); e != nil {
+	if e := a.templates.ExecuteTemplate(w, "admin.html", map[string]bool{"EmailLogin": a.production || ownerEmail() != ""}); e != nil {
 		log.Print("admin render failed")
 	}
 }
