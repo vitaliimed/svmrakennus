@@ -52,18 +52,26 @@ func TestFixedPublicCompanyEmail(t *testing.T) {
 	a := testApp(t)
 	cookie, csrf := signIn(t, a)
 	state, _, err := a.loadState(context.Background())
-	if err != nil { t.Fatal(err) }
-	if state.Settings.Email != systemSenderEmail { t.Fatal("public email is not corporate sender") }
+	if err != nil {
+		t.Fatal(err)
+	}
+	if state.Settings.Email != systemSenderEmail {
+		t.Fatal("public email is not corporate sender")
+	}
 	state.Settings.Email = "someone@example.org"
 	payload, _ := json.Marshal(state)
 	response := request(a, "PUT", "/api/admin/state", strings.NewReader(string(payload)), cookie, csrf)
-	if response.Code != 200 { t.Fatal("admin save failed", response.Body.String()) }
+	if response.Code != 200 {
+		t.Fatal("admin save failed", response.Body.String())
+	}
 	saved, _, err := a.loadState(context.Background())
 	if err != nil || saved.Settings.Email != systemSenderEmail {
 		t.Fatal("corporate contact email was changed", saved.Settings.Email, err)
 	}
 	record, err := a.store.Get(context.Background(), "state/settings")
-	if err != nil { t.Fatal(err) }
+	if err != nil {
+		t.Fatal(err)
+	}
 	var raw State
 	if err := json.Unmarshal(record.Data, &raw); err != nil || raw.Settings.Email != systemSenderEmail {
 		t.Fatal("corporate email was persisted incorrectly", err)
