@@ -84,7 +84,7 @@ func TestSVMContactVisibilityOnDetailPages(t *testing.T) {
 		if strings.Contains(html, `id="lead-form"`) || strings.Contains(html, `id="contact"`) {
 			t.Fatalf("disabled contact still appears on %s", path)
 		}
-		if !strings.Contains(html, "mailto:hello@example.com") {
+		if !strings.Contains(html, "mailto:service@svmrakennus.fi") {
 			t.Fatal("contact link must still provide an email fallback")
 		}
 	}
