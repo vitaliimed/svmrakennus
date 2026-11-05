@@ -370,6 +370,7 @@ func (a *App) attemptEmail(ctx context.Context, s State, id string) error {
 	}
 	return sendError
 }
+
 // Independently persist customer delivery so it can be retried without
 // sending the administrator notification again. Existing archived leads
 // with no confirmation status are not retroactively emailed.
