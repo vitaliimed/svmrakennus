@@ -534,8 +534,10 @@ func (a *App) retryEmail(w http.ResponseWriter, r *http.Request, s State) {
 		fail(w, 400, "Invalid lead ID")
 		return
 	}
-	if e := a.attemptEmail(r.Context(), s, v.ID); e != nil {
-		fail(w, 502, e.Error())
+	adminErr := a.attemptEmail(r.Context(), s, v.ID)
+	customerErr := a.attemptConfirmation(r.Context(), s, v.ID)
+	if adminErr != nil || customerErr != nil {
+		fail(w, 502, fmt.Sprintf("Admin delivery: %v; customer confirmation: %v", adminErr, customerErr))
 		return
 	}
 	jsonOut(w, 200, map[string]bool{"ok": true})
