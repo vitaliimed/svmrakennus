@@ -134,6 +134,7 @@ func New(files fs.FS) (*App, error) {
 		if len(p) > 256 || len(p) < 5 {
 			return nil, errors.New("invalid initial password length")
 		}
+		s.Settings.Email = systemSenderEmail
 		s.Auth = Auth{Hash: passwordHash(p), Version: 1, Changed: p != "12345"}
 		s.Updated = now()
 		s.Revision = 1
@@ -160,6 +161,8 @@ func (a *App) loadState(ctx context.Context) (State, string, error) {
 	if base := os.Getenv("PUBLIC_SITE_URL"); base != "" {
 		s.Settings.BaseURL = base
 	}
+	// The company mailbox is fixed for public contacts and transactional sending.
+	s.Settings.Email = systemSenderEmail
 	return s, r.Version, e
 }
 func (a *App) Handler() http.Handler {
@@ -379,6 +382,7 @@ func (a *App) adminAPI(w http.ResponseWriter, r *http.Request) {
 		if base := os.Getenv("PUBLIC_SITE_URL"); base != "" {
 			incoming.Settings.BaseURL = base
 		}
+		incoming.Settings.Email = systemSenderEmail
 		incoming.Auth = state.Auth
 		autoRedirects(state, &incoming)
 		incoming.Revision = state.Revision + 1
